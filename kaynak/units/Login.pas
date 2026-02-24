@@ -1,0 +1,170 @@
+﻿unit Login;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses, NetEncoding,
+  uniGUIClasses, uniGUIForm, Data.DB, MemDS, DBAccess, Uni, uniGUIBaseClasses,
+  uniSweetAlert, uniMultiItem, uniComboBox, uniDBComboBox, uniDBLookupComboBox,
+  uniImage, uniButton, uniEdit, uniLabel, uniPanel, uniHTMLFrame;
+
+type
+  TLoginForm = class(TUniForm)
+    UniContainerPanel1: TUniContainerPanel;
+    lblKulAdi: TUniLabel;
+    txtKulAdi: TUniEdit;
+    lblSifre: TUniLabel;
+    btnGiris: TUniButton;
+    logo: TUniImage;
+    txtSifre: TUniEdit;
+    UniImage1: TUniImage;
+    mesaj: TUniSweetAlert;
+    qLogin: TUniQuery;
+    btnVazgec: TUniButton;
+    btnUnuttum: TUniButton;
+    procedure btnGirisClick(Sender: TObject);
+    procedure UniFormCreate(Sender: TObject);
+    procedure UniFormShow(Sender: TObject);
+    procedure btnUnuttumClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+function LoginForm: TLoginForm;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  ServerModule, uniGUIVars, MainModule, Utils, YeniSifre;
+
+
+function LoginForm: TLoginForm;
+begin
+  Result := TLoginForm(UniMainModule.GetFormInstance(TLoginForm));
+end;
+
+procedure TLoginForm.btnGirisClick(Sender: TObject);
+begin
+
+  UniMainModule.isLogin := false;
+
+  if txtKulAdi.Text = '' then
+  begin
+    UniMainModule.Notification('', 'e-Posta adresi giriniz', 1);
+    UniMainModule.Focus(txtKulAdi);
+    exit;
+  end;
+
+  if txtSifre.Text = '' then
+  begin
+    UniMainModule.Notification('', 'Şifrenizi giriniz', 1);
+    UniMainModule.Focus(txtSifre);
+    exit;
+  end;
+
+  if UniServerModule.ServisDB.Connected then
+    UniServerModule.ServisDB.Close;
+
+  try
+    try
+      qLogin.Close;
+      qLogin.SQL.Clear;
+      qLogin.SQL.Add('SELECT KULLANICILAR.*, FRM_ID, FRM_GUID, FRM_ADI, FRM_WATERMARK');
+      qLogin.SQL.Add('FROM KULLANICILAR');
+      qLogin.SQL.Add('LEFT JOIN FIRMALAR ON KUL_FRM_ID=FRM_ID');
+      qLogin.SQL.Add('WHERE KUL_EMAIL=:KUL_EMAIL and KUL_SIFRE=:KUL_SIFRE');
+      qLogin.ParamByName('KUL_EMAIL').AsString := txtKulAdi.Text;
+      qLogin.ParamByName('KUL_SIFRE').AsString :=  LowerCase(MD5(txtSifre.Text));
+      qLogin.Open;
+      if qLogin.IsEmpty then
+        UniMainModule.Notification('', 'Kullanıcı email adresi ya da şifresi hatalı !!!', 1)
+      else
+      begin
+        if qLogin.FieldByName('KUL_DURUM').AsInteger = 0 then
+        begin
+          UniMainModule.Notification('',
+            'Kullanıcının programı kullanma yetkisi bulunmamaktadır.', 1);
+          exit;
+        end;
+
+        if (qLogin.FieldByName('KUL_BITTARIHI').AsDateTime < Now) then
+        begin
+          UniMainModule.Notification('', 'Programı kullanma süreniz tamamlanmıştır. Lütfen abonelik yenilemesi yapınız !!!', 1);
+          exit;
+        end;
+
+        UniMainModule.isLogin := true;
+
+
+        UniMainModule.KUL_ID := qLogin.FieldByName('KUL_ID').AsInteger;
+        UniMainModule.KUL_GUID := qLogin.FieldByName('KUL_GUID').AsString;
+        UniMainModule.KUL_DURUM := qLogin.FieldByName('KUL_DURUM').AsInteger;
+        UniMainModule.KUL_ADI := qLogin.FieldByName('KUL_ADI').AsString;
+        UniMainModule.KUL_SOYADI := qLogin.FieldByName('KUL_SOYADI').AsString;
+        UniMainModule.KUL_ADI_SOYADI := qLogin.FieldByName('KUL_ADI_SOYADI').AsString;
+        UniMainModule.KUL_EMAIL := qLogin.FieldByName('KUL_EMAIL').AsString;
+        UniMainModule.KUL_TURU := qLogin.FieldByName('KUL_TURU').AsInteger;
+        UniMainModule.KUL_ROLU := qLogin.FieldByName('KUL_ROLU').AsString;
+        UniMainModule.KUL_DYS_ROLU := qLogin.FieldByName('KUL_DYS_ROLU').AsString;
+        UniMainModule.KUL_BASTARIHI := qLogin.FieldByName('KUL_BASTARIHI').AsDateTime;
+        UniMainModule.KUL_BITTARIHI := qLogin.FieldByName('KUL_BITTARIHI').AsDateTime;
+        UniMainModule.KUL_FRM_ID := qLogin.FieldByName('KUL_FRM_ID').AsInteger;
+        UniMainModule.FRM_ID := qLogin.FieldByName('FRM_ID').AsInteger;
+        UniMainModule.FRM_GUID := qLogin.FieldByName('FRM_GUID').AsString;
+        UniMainModule.FRM_ADI := qLogin.FieldByName('FRM_ADI').AsString;
+        UniMainModule.FRM_WATERMARK := qLogin.FieldByName('FRM_WATERMARK').AsString;
+
+        UniMainModule.SessionToken := TNetEncoding.Base64.Encode('UID-' + UniMainModule.KUL_GUID + '.' + UniMainModule.GenerateGuid);
+
+        qLogin.Edit;
+        if not qLogin.FieldByName('KUL_AKTIVASYON_KODU').IsNull then
+          qLogin.FieldByName('KUL_AKTIVASYON_KODU').Clear;
+        qLogin.FieldByName('KUL_SESSION_TOKEN').AsString := UniMainModule.SessionToken;
+        qLogin.FieldByName('KUL_LAST_LOGIN_TIME').AsDateTime := Now;
+        qLogin.Post;
+
+        UniServerModule.Data.ProviderName := 'InterBase';
+        UniServerModule.Data.Database := ExtractFilePath(Application.ExeName) + 'files\veri\veri.fdb';
+        UniServerModule.Data.Username := 'SYSDBA';
+        UniServerModule.Data.Password := 'masterke';
+        UniServerModule.Data.SpecificOptions.Values['Charset'] := 'WIN1254';
+        UniServerModule.Data.SpecificOptions.Values['SQLDialect'] := '3';
+      end;
+    except
+      on e: exception do
+        UniMainModule.Notification('Hata', HataMesaj(e.Message), 2);
+    end;
+  finally
+    if qLogin.Active then
+      qLogin.Close;
+  end;
+end;
+
+
+
+procedure TLoginForm.btnUnuttumClick(Sender: TObject);
+begin
+  YeniSifreForm.ShowModal;
+end;
+
+procedure TLoginForm.UniFormCreate(Sender: TObject);
+begin
+  txtKulAdi.Text := 'emircan@fanusyazilim.com.tr';
+  txtSifre.Text := 'A123!456z';
+end;
+
+procedure TLoginForm.UniFormShow(Sender: TObject);
+begin
+  UniSession.AddJS('setTimeout(function(){'+ TUniEdit(txtKulAdi).JSName +'.focus()}, 500)');
+end;
+
+initialization
+
+RegisterAppFormClass(TLoginForm);
+
+end.

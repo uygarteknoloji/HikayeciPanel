@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.227,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.182,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firmalar.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.149,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firmalar.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.021,=C:\Projeler\Fanus\HikayeciPanel\kaynak\Main.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.199,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.777,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.199,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.052,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kullanicilar.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.981,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kullanici.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.531,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\YeniSifre.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.734,=C:\Projeler\Fanus\HikayeciPanel\kaynak\ServerModule.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.149,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firmalar.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.807,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.028,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firma.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.577,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.113,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\KayitBilgi.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.113,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firma.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.807,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.743,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\YeniSifreOlustur.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.308,=C:\Projeler\Fanus\HikayeciPanel\kaynak\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.028,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firma.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.062,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Login.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.162,=C:\Projeler\Fanus\HikayeciPanel\kaynak\ServiceModule.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.786,=C:\Projeler\Fanus\HikayeciPanel\kaynak\MainModule.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.577,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.227,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.dfm</Transaction>
+    <Transaction>2026.02.24 15:11:13.316,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.pas</Transaction>
+    <Transaction>2026.02.24 15:11:13.386,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.pas</Transaction>
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="units"/>
+    <File Path="units\KayitBilgi.pas"/>
+    <File Path="units\KayitBilgi.dfm"/>
+    <File Path="units\Kullanici.pas"/>
+    <File Path="units\Kullanici.dfm"/>
+    <File Path="units\Kullanicilar.pas"/>
+    <File Path="units\Kullanicilar.dfm"/>
+    <File Path="units\Login.pas"/>
+    <File Path="units\Login.dfm"/>
+    <File Path="units\YeniSifre.pas"/>
+    <File Path="units\YeniSifre.dfm"/>
+    <File Path="units\YeniSifreOlustur.pas"/>
+    <File Path="units\YeniSifreOlustur.dfm"/>
+    <File Path="units\Kategoriler.pas"/>
+    <File Path="units\Kategoriler.dfm"/>
+    <File Path="units\Kategori.pas"/>
+    <File Path="units\Kategori.dfm"/>
+    <File Path="units\Cihaz.pas"/>
+    <File Path="units\Cihaz.dfm"/>
+    <File Path="units\Cihazlar.pas"/>
+    <File Path="units\Cihazlar.dfm"/>
+    <File Path="Main.pas"/>
+    <File Path="Main.dfm"/>
+    <File Path="MainModule.pas"/>
+    <File Path="MainModule.dfm"/>
+    <File Path="ServerModule.pas"/>
+    <File Path="ServerModule.dfm"/>
+    <File Path="ServiceModule.pas"/>
+    <File Path="ServiceModule.dfm"/>
+  </ProjectSortOrder>
+</BorlandProject>

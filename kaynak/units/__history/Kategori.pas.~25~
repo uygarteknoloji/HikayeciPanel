@@ -1,0 +1,250 @@
+unit Kategori;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses, Kategoriler,
+  uniGUIClasses, uniGUIFrame, Data.DB, MemDS, DBAccess, Uni, uniGUIBaseClasses,
+  uniSweetAlert, uniMultiItem, uniComboBox, uniDBComboBox, uniDBLookupComboBox,
+  uniCheckBox, uniDBCheckBox, uniMemo, uniDBMemo, uniEdit, uniDBEdit,
+  uniScrollBox, uniButton, uniBitBtn, uniPanel, uniImage, uniDBImage, Vcl.Menus,
+  uniMainMenu, uniFileUpload;
+
+type
+  TKategoriForm = class(TUniFrame)
+    UniToolBar1: TUniPanel;
+    btnKaydet: TUniBitBtn;
+    UniPanel1: TUniPanel;
+    btnYeni: TUniBitBtn;
+    btnKapat: TUniBitBtn;
+    btnVazgec: TUniBitBtn;
+    btnSil: TUniBitBtn;
+    btnYardim: TUniBitBtn;
+    UniScrollBox1: TUniScrollBox;
+    txtKategori: TUniDBEdit;
+    txtDurum: TUniDBCheckBox;
+    txtKlasor: TUniDBEdit;
+    sil: TUniSweetAlert;
+    iptal: TUniSweetAlert;
+    qKategori: TUniQuery;
+    dsKategori: TDataSource;
+    txtAciklama: TUniDBMemo;
+    procedure UniFrameCreate(Sender: TObject);
+    procedure silConfirm(Sender: TObject);
+    procedure btnKapatClick(Sender: TObject);
+    procedure btnKaydetClick(Sender: TObject);
+    procedure btnSilClick(Sender: TObject);
+    procedure btnVazgecClick(Sender: TObject);
+    procedure btnYeniClick(Sender: TObject);
+    procedure dsKategoriStateChange(Sender: TObject);
+    procedure iptalConfirm(Sender: TObject);
+    procedure UniFrameAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
+  private
+    FRM_ID: integer;
+    procedure DugmeleriAyarla;
+    function GenerateGuid: string;
+    { Private declarations }
+  public
+    { Public declarations }
+    PKategorilerForm: TKategorilerForm;
+  end;
+
+implementation
+
+{$R *.dfm}
+
+
+uses ServerModule, MainModule, Utils;
+
+
+procedure TKategoriForm.btnKapatClick(Sender: TObject);
+begin
+  try
+    if qKategori.State in dsEditModes then
+      iptal.Show
+    else
+    begin
+      if PKategorilerForm<>nil then
+      begin
+        UniMainModule.DataSetRefresh(PKategorilerForm.qKategoriler, 'KAT_ID', qKategori.FieldByName('KAT_ID').AsInteger);
+        UniMainModule.Focus(PKategorilerForm.txtKategori);
+      end;
+      UniMainModule.FrameKapat(Self);
+    end;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+function TKategoriForm.GenerateGuid: string;
+var
+  s: string;
+begin
+  s := StringReplace(TGUID.NewGuid.ToString, '{', '', [rfReplaceAll]);
+  s := StringReplace(s, '}', '', [rfReplaceAll]);
+  s := StringReplace(s, '-', '', [rfReplaceAll]);
+  Result := s;
+end;
+
+procedure TKategoriForm.btnKaydetClick(Sender: TObject);
+begin
+  try
+    if qKategori.State in dsEditModes then
+    begin
+      if Trim(qKategori.FieldByName('KAT_ADI').AsString)='' then
+      begin
+        UniMainModule.Notification('', 'Kategori adýný giriniz', 1);
+        UniMainModule.Focus(txtKategori);
+        exit;
+      end;
+      qKategori.Post;
+      qKategori.ParamByName('KAT_ID').AsInteger := qKategori.FieldByName('KAT_ID').AsInteger;
+      UniMainModule.Notification('', 'Ýþlem Tamamlandý', 3);
+      UniMainModule.Focus(txtKategori);
+    end;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKategoriForm.btnSilClick(Sender: TObject);
+begin
+  try
+    sil.Show;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKategoriForm.btnVazgecClick(Sender: TObject);
+begin
+  try
+    if qKategori.State in dsEditModes then
+    begin
+      qKategori.Cancel;
+      if not qKategori.FieldByName('KAT_ID').IsNull then
+      begin
+        qKategori.ParamByName('KAT_ID').AsInteger := qKategori.FieldByName('KAT_ID').AsInteger;
+        UniMainModule.Focus(txtKategori);
+      end
+      else
+      begin
+        if PKategorilerForm<>nil then
+        begin
+          UniMainModule.DataSetRefresh(PKategorilerForm.qKategoriler, 'KAT_ID', qKategori.FieldByName('KAT_ID').AsInteger);
+          UniMainModule.Focus(PKategorilerForm.txtKategori);
+        end;
+        UniMainModule.FrameKapat(Self);
+      end;
+    end;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKategoriForm.btnYeniClick(Sender: TObject);
+begin
+  try
+    if qKategori.State=dsBrowse then
+    begin
+      qKategori.Append;
+      UniMainModule.Focus(txtKategori);
+    end;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKategoriForm.dsKategoriStateChange(Sender: TObject);
+begin
+  DugmeleriAyarla;
+end;
+
+procedure TKategoriForm.silConfirm(Sender: TObject);
+begin
+  try
+    qKategori.Delete;
+    if PKategorilerForm<>nil then
+    begin
+      UniMainModule.DataSetRefresh(PKategorilerForm.qKategoriler, 'KAT_ID', qKategori.FieldByName('KAT_ID').AsInteger);
+      UniMainModule.Focus(PKategorilerForm.txtKategori);
+    end;
+    UniMainModule.Notification('', 'Kayýt Silindi', 3);
+    UniMainModule.FrameKapat(Self);
+  except on e:exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKategoriForm.UniFrameAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
+begin
+  if EventName = 'esc_pressed' then btnKapatClick(Sender);
+end;
+
+procedure TKategoriForm.UniFrameCreate(Sender: TObject);
+begin
+  self.ClientEvents.ExtEvents.Values['afterrender'] := 'function afterrender(sender, eOpts)' +
+         '{' +
+         '   sender.el.on("keydown", function(e){' +
+         '   if (e.getKey() == Ext.EventObject.ESC) {' +
+         '      ajaxRequest(sender, "esc_pressed", []);' +
+         '   }' +
+         '   });' +
+         '}';
+
+  UniMainModule.ButtonMask([btnKaydet, btnVazgec, btnYeni, btnSil, btnKapat]);
+  UniMainModule.SetFocusBlur(TUniFrame(Self));
+
+  KAT_ID := UniMainModule.Tmp_ID;
+  UniMainModule.Tmp_ID := -1;
+
+  try
+    if qKategori.Active then
+      qKategori.Close;
+
+    qKategori.ParamByName('KAT_ID').AsInteger := KAT_ID;
+    qKategori.Open;
+
+    if KAT_ID=0 then
+    begin
+      qKategori.Append;
+    end;
+
+    UniMainModule.Focus(txtKategori);
+
+  except on e: exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKategoriForm.DugmeleriAyarla;
+begin
+  try
+    btnKaydet.Visible     := qKategori.State in dsEditModes;
+    btnVazgec.Visible     := btnKaydet.Visible;
+    btnYeni.Visible       := not btnKaydet.Visible;
+    btnSil.Visible        := not btnKaydet.Visible;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKategoriForm.iptalConfirm(Sender: TObject);
+begin
+  try
+    qKategori.Cancel;
+    if PKategorilerForm<>nil then
+    begin
+      UniMainModule.DataSetRefresh(PKategorilerForm.qKategorilar, 'KAT_ID', qKategori.FieldByName('KAT_ID').AsInteger);
+      UniMainModule.Focus(PKategorilerForm.txtFirma);
+    end;
+    UniMainModule.FrameKapat(Self)
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+end.

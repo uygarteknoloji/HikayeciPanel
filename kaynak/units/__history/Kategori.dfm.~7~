@@ -1,0 +1,314 @@
+object KategoriForm: TKategoriForm
+  Left = 0
+  Top = 0
+  Width = 627
+  Height = 488
+  OnCreate = UniFrameCreate
+  OnAjaxEvent = UniFrameAjaxEvent
+  TabOrder = 0
+  object UniToolBar1: TUniPanel
+    Left = 0
+    Top = 0
+    Width = 627
+    Height = 60
+    Hint = ''
+    Margins.Left = 5
+    Margins.Top = 5
+    Margins.Right = 5
+    Margins.Bottom = 5
+    Align = alTop
+    TabOrder = 0
+    BorderStyle = ubsFrameLowered
+    Caption = ''
+    object btnKaydet: TUniBitBtn
+      Left = 2
+      Top = 2
+      Width = 56
+      Height = 56
+      Hint = 'Kaydet'
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      ShowHint = True
+      ParentShowHint = False
+      Caption = ''
+      Align = alLeft
+      TabOrder = 1
+      Images = UniMainModule.ikonListe
+      ImageIndex = 11
+      OnClick = btnKaydetClick
+    end
+    object UniPanel1: TUniPanel
+      Left = 226
+      Top = 2
+      Width = 287
+      Height = 56
+      Hint = ''
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      Align = alClient
+      ParentFont = False
+      Font.Height = -24
+      Font.Name = 'Calibri'
+      TabOrder = 5
+      TabStop = False
+      BorderStyle = ubsNone
+      Caption = 'Kategori'
+      Color = 15724527
+    end
+    object btnYeni: TUniBitBtn
+      Left = 114
+      Top = 2
+      Width = 56
+      Height = 56
+      Hint = 'Yeni'
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      ShowHint = True
+      ParentShowHint = False
+      Caption = ''
+      Align = alLeft
+      TabOrder = 3
+      Images = UniMainModule.ikonListe
+      ImageIndex = 0
+      OnClick = btnYeniClick
+    end
+    object btnKapat: TUniBitBtn
+      Left = 569
+      Top = 2
+      Width = 56
+      Height = 56
+      Hint = 'Kapat'
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      ShowHint = True
+      ParentShowHint = False
+      Caption = ''
+      Align = alRight
+      TabOrder = 7
+      Images = UniMainModule.ikonListe
+      ImageIndex = 9
+      OnClick = btnKapatClick
+    end
+    object btnVazgec: TUniBitBtn
+      Left = 58
+      Top = 2
+      Width = 56
+      Height = 56
+      Hint = 'Vazge'#231
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      ShowHint = True
+      ParentShowHint = False
+      Caption = ''
+      Align = alLeft
+      TabOrder = 2
+      Images = UniMainModule.ikonListe
+      ImageIndex = 12
+      OnClick = btnVazgecClick
+    end
+    object btnSil: TUniBitBtn
+      Left = 170
+      Top = 2
+      Width = 56
+      Height = 56
+      Hint = 'Sil'
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      ShowHint = True
+      ParentShowHint = False
+      Caption = ''
+      Align = alLeft
+      TabOrder = 4
+      Images = UniMainModule.ikonListe
+      ImageIndex = 2
+      OnClick = btnSilClick
+    end
+    object btnYardim: TUniBitBtn
+      Left = 513
+      Top = 2
+      Width = 56
+      Height = 56
+      Hint = 'Yard'#305'm'
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      Visible = False
+      ShowHint = True
+      ParentShowHint = False
+      Caption = ''
+      Align = alRight
+      TabOrder = 6
+      Images = UniMainModule.ikonListe
+      ImageIndex = 10
+    end
+  end
+  object UniScrollBox1: TUniScrollBox
+    Left = 0
+    Top = 60
+    Width = 627
+    Height = 428
+    Hint = ''
+    Margins.Left = 5
+    Margins.Top = 5
+    Margins.Right = 5
+    Margins.Bottom = 5
+    Align = alClient
+    Color = 15724527
+    TabOrder = 1
+    ScrollHeight = 241
+    ScrollWidth = 355
+    object txtKategori: TUniDBEdit
+      Left = 22
+      Top = 86
+      Width = 270
+      Height = 23
+      Hint = ''
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      DataField = 'KAT_ADI'
+      DataSource = dsKategori
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 1
+      ClearButton = True
+      FieldLabel = 'Kategori'
+      FieldLabelSeparator = ' '
+      FieldLabelFont.Color = clRed
+    end
+    object txtDurum: TUniDBCheckBox
+      Left = 130
+      Top = 41
+      Width = 97
+      Height = 17
+      Hint = ''
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      DataField = 'KAT_DURUM'
+      DataSource = dsKategori
+      ValueChecked = '1'
+      ValueUnchecked = '0'
+      Caption = 'Kullan'#305'mda'
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 0
+      ParentColor = False
+      Color = clBtnFace
+    end
+    object txtKlasor: TUniDBEdit
+      Left = 22
+      Top = 119
+      Width = 270
+      Height = 23
+      Hint = ''
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      DataField = 'KAT_KLASOR'
+      DataSource = dsKategori
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 2
+      ClearButton = True
+      FieldLabel = 'Klas'#246'r'
+      FieldLabelSeparator = ' '
+    end
+    object txtAciklama: TUniDBMemo
+      Left = 22
+      Top = 152
+      Width = 333
+      Height = 89
+      Hint = ''
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      DataField = 'KAT_ACIKLAMA'
+      DataSource = dsKategori
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 3
+      ClearButton = True
+      FieldLabel = 'A'#231#305'klama'
+      FieldLabelSeparator = ' '
+    end
+  end
+  object sil: TUniSweetAlert
+    Background = '#fff'
+    Title = ' '
+    Text = 'Silmek istedi'#287'inize emin misiniz?'
+    ConfirmButtonText = 'Evet'
+    CancelButtonText = 'Hay'#305'r'
+    ConfirmButtonColor = clGreen
+    CancelButtonColor = clRed
+    AlertType = atQuestion
+    Width = 500
+    Padding = 20
+    ShowCancelButton = True
+    ShowLoaderOnConfirm = True
+    OnConfirm = silConfirm
+    Left = 104
+    Top = 232
+  end
+  object iptal: TUniSweetAlert
+    Background = '#fff'
+    Title = ' '
+    Text = 'Kay'#305't i'#351'lemini iptal etmek istedi'#287'inize emin misiniz?'
+    ConfirmButtonText = 'Evet'
+    CancelButtonText = 'Hay'#305'r'
+    ConfirmButtonColor = clGreen
+    CancelButtonColor = clRed
+    AlertType = atQuestion
+    Width = 500
+    Padding = 20
+    ShowCancelButton = True
+    ShowLoaderOnConfirm = True
+    OnConfirm = iptalConfirm
+    Left = 152
+    Top = 232
+  end
+  object qKategori: TUniQuery
+    KeyFields = 'KAT_ID'
+    Connection = UniServerModule.Data
+    SQL.Strings = (
+      'Select *'
+      'From KATEGORILER'
+      'Where KAT_ID=:KAT_ID')
+    Options.DefaultValues = True
+    SpecificOptions.Strings = (
+      'InterBase.FetchAll=True'
+      'InterBase.KeyGenerator=GEN_KATEGORILER_ID')
+    Active = True
+    Left = 216
+    Top = 232
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'KAT_ID'
+        Value = nil
+      end>
+  end
+  object dsKategori: TDataSource
+    DataSet = qKategori
+    OnStateChange = dsKategoriStateChange
+    Left = 264
+    Top = 232
+  end
+end

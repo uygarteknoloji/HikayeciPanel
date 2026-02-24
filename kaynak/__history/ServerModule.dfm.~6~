@@ -1,0 +1,392 @@
+object UniServerModule: TUniServerModule
+  OnCreate = UniGUIServerModuleCreate
+  TempFolder = 'temp\'
+  SessionTimeout = 1200000
+  Title = 'Hikayeci'
+  SuppressErrors = []
+  Bindings = <>
+  MainFormDisplayMode = mfPage
+  CustomFiles.Strings = (
+    'files/script/keyboard.js'
+    'files/css/keyboard.css'
+    'files/script/Callout.js'
+    'files/script/TweenMax.min.js'
+    'files/script/jquery.inputmask.min.js')
+  CustomCSS.Strings = (
+    '<style type="text/css">'
+    '  @font-face {'
+    '    font-family: '#39'Bungee'#39';'
+    
+      '    src: url("files/fonts/Bungee-Regular.woff2") format('#39'woff2'#39')' +
+      ','
+    '        url("files/fonts/Bungee-Regular.woff") format('#39'woff'#39');'
+    '    font-weight: normal;'
+    '    font-style: normal;'
+    '    font-display: swap;'
+    '  }'
+    '  .bungee-button-style {'
+    
+      '    font-family: '#39'Bungee'#39', sans-serif !important; /* Tan'#305'mlad'#305#287#305 +
+      'n'#305'z ismi kullan'#305'n */'
+    '    font-size: 18px; /* '#304'ste'#287'e ba'#287'l'#305' olarak boyutu ayarlay'#305'n */'
+    '    /* Di'#287'er stil ayarlar'#305' */'
+    '  } '
+    '  .imgButton{'
+    '    border:2px solid #ccc;'
+    '  }'
+    '  .geEditor.geClassic .geMenubarContainer{'
+    '    display: none !important;'
+    '  }'
+    '  .geToolbarContainer .geButtonContainer{'
+    '    display: none !important;'
+    '  }'
+    '  .x-mask {'
+    '    background-color: rgba(0, 0, 0, 0.7) !important;'
+    '  }'
+    '  .x-mask-msg{'
+    '    color: transparent;'
+    '    background-color: transparent;  '
+    '    border-color: transparent;'
+    '    width: 300px !important;'
+    '    height: 300px !important;'
+    '  }'
+    '  .x-mask-loading{'
+    '    border-color: transparent;'
+    '    width: 300px !important;'
+    '    height: 300px !important;'
+    '  }'
+    '  .x-mask-msg-inner{'
+    '    border-width:0px;'
+    '    color: transparent;'
+    '    background-color: transparent;'
+    '    background-image:url("files/img/loading.gif");'
+    '    background-repeat:no-repeat;'
+    '    background-size: auto;'
+    '  }'
+    '  #container, #sliders {'
+    '    min-width: 310px; '
+    '    max-width: 800px;'
+    '    margin: 0 auto;'
+    '  }'
+    '  #container {'
+    '    height: 400px; '
+    '  }'
+    
+      '  .x-btn-icon-left > .x-btn-icon-el-default-large, .x-btn-icon-r' +
+      'ight > .x-btn-icon-el-default-large'
+    '  {'
+    '    width: 110px !important;'
+    '  }'
+    '  .x-tab.x-tab-active.x-tab-default-top{'
+    '    background-color: red !important;'
+    '  }'
+    '  .x-tab.x-tab-active.x-tab-default .x-tab-inner-default'
+    '  {'
+    '    color: white;'
+    '  }'
+    '  .formshadow'
+    '  {'
+    '    box-shadow: 0 10px 10px -5px;'
+    '    -webkit-box-shadow: 0 10px 10px -5px;'
+    '    -moz-box-shadow: 0 10px 10px -5px;'
+    '  }'
+    '  .ext-ux-clearbutton'
+    '  {'
+    '    background-color: white !important;'
+    '  }'
+    '  .x-menu-item'
+    '  {'
+    '    background-color: #555 !important;'
+    '  } '
+    '  .x-menu-item-active'
+    '  {'
+    '    background-color: #b91515 !important;'
+    '    background-image: none;'
+    '  }'
+    '  .x-menu-item-disabled'
+    '  {'
+    '    opacity: 1 !important;'
+    '  }'
+    '  .x-menu-item-text'
+    '  {'
+    '    height: 30px !important;'
+    '    padding-top: 5px !important;'
+    '    padding-right: 25px;'
+    '    color: white;'
+    '    font-size: 11px;'
+    '    font-family: tahoma,arial,verdana,sans-serif;'
+    '    font-weight: bold;'
+    '  }'
+    '  .x-btn-default-toolbar-small .x-btn-inner'
+    '  {'
+    '    font-weight: bold;'
+    '  }'
+    '  .x-btn-default-large .x-btn-split-right'
+    '  {'
+    '    width: 70px;'
+    '  }'
+    '  .x-menu-icon-separator'
+    '  {'
+    '    display: none; '
+    '  }'
+    
+      '  .x-list .x-list-item-odd.x-list-item-tpl, .x-list .x-list-item' +
+      '-odd .x-dock-horizontal'
+    '  {'
+    '     background-color: #ddd !important  '
+    '  }'
+    '  .mobilstokresimbaslik'
+    '  {'
+    '     background-color: maroon !important;'
+    '     color: white;'
+    '     height: 30px;'
+    '     padding-top: 5px;'
+    '     text-align: left;'
+    '  }'
+    
+      '  .x-grid .x-grid-header-container .x-grid-header-container-inne' +
+      'r'
+    '  {'
+    '    display: flex !important;'
+    '  }'
+    '  .x-picker-slot .x-picker-item'
+    '  {'
+    '    color: black;'
+    '  }'
+    '  .x-msgbox-text'
+    '  {'
+    '    color: maroon;'
+    '    font-weight: bold;'
+    '  }'
+    '  .x-field.x-field-labeled .x-form-label'
+    '  {'
+    '     text-align: left;'
+    '  }'
+    '  .x-list-header'
+    '  {'
+    '     color: maroon;'
+    '     font-weight: bold !important;'
+    '     font-size: 24px !important;'
+    '     text-align: left;'
+    '  }'
+    '  .x-list-item'
+    '  {'
+    '     text-align: left;'
+    '     color: black;'
+    '     font-size: 14px;'
+    '  }'
+    '  .mainmenu{'
+    
+      '    background-image: radial-gradient(circle at bottom right, #c' +
+      'cc, #fff);'
+    '  }'
+    '  .mobilloginbackground'
+    '  {'
+    '    background: url("/files/img/confectionary.png") !important;'
+    '  }'
+    '  .mobilmenubaslik'
+    '  {'
+    '    border-bottom:1px solid black;'
+    '  }'
+    '  .x-tab-default-active .x-tab-inner{'
+    '    color: white !important;'
+    '  }'
+    '  .x-tab.x-tab-active.x-tab-default-top {'
+    '    background-image: none;'
+    '    background-color: red;'
+    '  }'
+    '  .x-column-header'
+    '  {'
+    '     font-weight: bold;'
+    '  }'
+    '  .gridborder'
+    '  {'
+    '   border: 2px solid red !important;'
+    '  }'
+    '  .bntLogin'
+    '  {'
+    '   background:#565d65 !important; '
+    '   -webkit-transition: background 0.2s ease-in-out;'
+    '   transition: background 0.2s ease-in-out;'
+    '   border: 1px solid white !important;'
+    '   border-radius: 0px !important;'
+    '  }  '
+    '  .bntLogin:hover'
+    '  {'
+    '   color: red !important;'
+    '   background:#25b8ee !important;'
+    '   -webkit-transition: background 0.2s ease-in-out;'
+    '   transition: background 0.2s ease-in-out;'
+    '   border: none !important;'
+    '   border-radius: 5px !important;'
+    '   -webkit-box-shadow:0px 0px 3px 1px #a0a0a0 ;'
+    '   -moz-box-shadow:0px 0px 3px 1px #a0a0a0 ;'
+    '   box-shadow:0px 0px 3px 1px #a0a0a0 ;'
+    '  }'
+    '  .customPanelBorder'
+    '  {'
+    '   border-top:1px solid #b5b5b5 !important;'
+    '   border-left:none !important;'
+    '   border-right:none !important;'
+    '   border-bottom:1px solid #b5b5b5 !important;'
+    '  }'
+    '  .x-window-default'
+    '  {'
+    '   border-radius:0 !important;'
+    '  }'
+    '  .frmNoBorderRadius '
+    '  {'
+    '   border-radius: 0px !important; '
+    '  }'
+    '  .frmBorderRadius '
+    '  {'
+    '    border-radius: 0px !important;'
+    '  }'
+    '  .x-css-shadow '
+    '  {'
+    '   -webkit-box-shadow: none !important;'
+    '   -moz-box-shadow: none !important;'
+    '   box-shadow: none !important;'
+    '  }'
+    '  .login_edit'
+    '  {'
+    '   background-color:#fcf5e4 !important; '
+    '   background-image: none !important; '
+    '  }'
+    '  .LoginForm {'
+    '   border: 2px solid white !important;'
+    '  }'
+    '  .swal2-modal {'
+    '    background-color: #fff;'
+    '    font-family: '#39'Helvetica Neue'#39', Helvetica, Arial, sans-serif;'
+    '    border-radius: 5px;'
+    '    box-sizing: border-box;'
+    '    text-align: center;'
+    '    margin: auto;'
+    '    overflow-x: hidden;'
+    '    overflow-y: auto;'
+    '    display: none;'
+    '    position: relative;'
+    '    top: -150px;'
+    '  }  '
+    '  '
+    '</style>')
+  CustomMeta.Strings = (
+    '<meta name="HandheldFriendly" content="True" />'
+    
+      '<meta name="viewport" content="width=device-width,initial-scale=' +
+      '1.0,maximum-scale=1,user-scalable=no"/> '
+    
+      '<meta name="description" content="Uygar,Teknoloji,Masa'#252'st'#252',Web,M' +
+      'obil,Yaz'#305'l'#305'm,Otomasyon,Entegrasyon,'#199#246'z'#252'mleri">'
+    
+      '<meta name="keywords" content="Uygar,Teknoloji,Yaz'#305'l'#305'm,Program,M' +
+      'obil,Web,Proje,'#199#246'z'#252'm,Otomasyon,Entegrasyon,Dan'#305#351'manl'#305'k,Kalite,Mu' +
+      'hasebe,Tasar'#305'm,ISO,16949,27001">'
+    '<meta name="mobile-web-app-capable" content="yes">')
+  ServerMessages.UnavailableErrMsg = 'Ba'#287'lant'#305' hatas'#305
+  ServerMessages.LoadingMessage = ' '
+  ServerMessages.ExceptionTemplate.Strings = (
+    '<html>'
+    '<body bgcolor="#323c40">'
+    '<br /><br /><br />'
+    '<p style="text-align:center;color:white">[###message###]</p>'
+    
+      '<p style="text-align:center;color:white"><a href="[###url###]" s' +
+      'tyle="color:white">Uygulamay'#305' yeniden ba'#351'lat</a></p>'
+    '<br />'
+    
+      '<p style="text-align:center;color:#A05050"><img src="files/img/U' +
+      'ygar.png" width="300" /></p>'
+    '</body>'
+    '</html>')
+  ServerMessages.InvalidSessionTemplate.Strings = (
+    '<html>'
+    '<body bgcolor="#323c40">'
+    '<br /><br /><br />'
+    
+      '<p style="text-align:center;color:white"><a href="[###url###]" s' +
+      'tyle="color:white">Uygulamay'#305' yeniden ba'#351'lat</a></p>'
+    '<br />'
+    
+      '<p style="text-align:center;color:#A05050"><img src="files/img/U' +
+      'ygar.png" width="300" /></p>'
+    '</body>'
+    '</html>')
+  ServerMessages.TerminateTemplate.Strings = (
+    '<html>'
+    '<body bgcolor="#323c40">'
+    '<br /><br /><br />'
+    '<p style="text-align:center;color:white">[###message###]</p>'
+    
+      '<p style="text-align:center;color:white"><a href="[###url###]" s' +
+      'tyle="color:white">Uygulamay'#305' yeniden ba'#351'lat</a></p>'
+    '<br />'
+    
+      '<p style="text-align:center;color:#A05050"><img src="files/img/U' +
+      'ygar.png" width="300" /></p>'
+    '</body>'
+    '</html>')
+  ServerMessages.InvalidSessionMessage = 'Uygulama s'#252'resi doldu'
+  ServerMessages.TerminateMessage = 'Uygulama s'#252'resi doldu'
+  SSL.SSLOptions.RootCertFile = 'root.pem'
+  SSL.SSLOptions.CertFile = 'cert.pem'
+  SSL.SSLOptions.KeyFile = 'key.pem'
+  SSL.SSLOptions.Method = sslvTLSv1_2
+  SSL.SSLOptions.SSLVersions = [sslvTLSv1_2]
+  SSL.SSLOptions.Mode = sslmUnassigned
+  SSL.SSLOptions.VerifyMode = []
+  SSL.SSLOptions.VerifyDepth = 0
+  SSL.SSLPort = 443
+  ConnectionFailureRecovery.DetailedLog = True
+  ConnectionFailureRecovery.ErrorMessage = 'Ba'#287'lant'#305' Hatas'#305
+  ConnectionFailureRecovery.RetryMessage = 'Tekrar ba'#287'lant'#305' kuruluyor...'
+  Height = 347
+  Width = 470
+  object Data: TUniConnection
+    ProviderName = 'InterBase'
+    Database = 'C:\Projeler\KYSPro\uygulama\files\veri\veri1.fdb'
+    SpecificOptions.Strings = (
+      'InterBase.Protocol=TCP'
+      'InterBase.IPVersion=ivIPBoth'
+      'InterBase.WireCompression=False'
+      'InterBase.UseSSL=False'
+      'InterBase.SQLDialect=3'
+      'InterBase.UseUnicode=False')
+    Username = 'SYSDBA'
+    Server = 'localhost'
+    LoginPrompt = False
+    Left = 163
+    Top = 99
+    EncryptedPassword = 'B2FFCBFFCFFFCBFFDEFFCBFFC7FFCBFF8AFF'
+  end
+  object ServisDB: TUniConnection
+    ProviderName = 'InterBase'
+    Database = 'C:\Projeler\KYSPro\uygulama\files\veri\ServisDB.FDB'
+    Username = 'SYSDBA'
+    Server = 'localhost'
+    LoginPrompt = False
+    Left = 91
+    Top = 99
+    EncryptedPassword = 'B2FFCBFFCFFFCBFFDEFFCBFFC7FFCBFF8AFF'
+  end
+  object IBP: TInterBaseUniProvider
+    Left = 224
+    Top = 99
+  end
+  object qKayitInfo: TUniQuery
+    Connection = ServisDB
+    SQL.Strings = (
+      'Select KUL_ID, KUL_ADI_SOYADI'
+      'From Kullanicilar'
+      'Where KUL_ID=:KUL_ID')
+    Left = 293
+    Top = 99
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'KUL_ID'
+        Value = nil
+      end>
+  end
+end

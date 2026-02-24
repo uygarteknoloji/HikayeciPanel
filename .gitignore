@@ -1,0 +1,17 @@
+# 1. Kaynak klasörü altındaki tüm .dcu dosyaları
+/kaynak/**/*.dcu
+
+# 2. Uygulama klasörü altındaki tüm .dcu dosyaları
+/uygulama/**/*.dcu
+
+# 3. Uygulama klasörü altındaki tüm .exe dosyaları
+/uygulama/**/*.exe
+
+# 4. Uygulama klasörü altındaki cache klasörü
+/uygulama/cache/
+
+# 5. Uygulama klasörü altındaki log klasörü
+/uygulama/log/
+
+# 6. Uygulama klasörü altındaki temp klasörü
+/uygulama/temp/

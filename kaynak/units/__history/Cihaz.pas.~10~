@@ -1,0 +1,256 @@
+unit Cihaz;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses, Cihazlar,
+  uniGUIClasses, uniGUIFrame, Data.DB, MemDS, DBAccess, Uni, uniGUIBaseClasses,
+  uniSweetAlert, uniMultiItem, uniComboBox, uniDBComboBox, uniDBLookupComboBox,
+  uniCheckBox, uniDBCheckBox, uniMemo, uniDBMemo, uniEdit, uniDBEdit,
+  uniScrollBox, uniButton, uniBitBtn, uniPanel, uniImage, uniDBImage, Vcl.Menus,
+  uniMainMenu, uniFileUpload;
+
+type
+  TCihazForm = class(TUniFrame)
+    UniToolBar1: TUniPanel;
+    btnKaydet: TUniBitBtn;
+    UniPanel1: TUniPanel;
+    btnYeni: TUniBitBtn;
+    btnKapat: TUniBitBtn;
+    btnVazgec: TUniBitBtn;
+    btnSil: TUniBitBtn;
+    btnYardim: TUniBitBtn;
+    UniScrollBox1: TUniScrollBox;
+    txtCihazAdi: TUniDBEdit;
+    txtDurum: TUniDBCheckBox;
+    txtMAC: TUniDBEdit;
+    sil: TUniSweetAlert;
+    iptal: TUniSweetAlert;
+    qCihaz: TUniQuery;
+    dsCihaz: TDataSource;
+    txtAciklama: TUniDBMemo;
+    procedure UniFrameCreate(Sender: TObject);
+    procedure silConfirm(Sender: TObject);
+    procedure btnKapatClick(Sender: TObject);
+    procedure btnKaydetClick(Sender: TObject);
+    procedure btnSilClick(Sender: TObject);
+    procedure btnVazgecClick(Sender: TObject);
+    procedure btnYeniClick(Sender: TObject);
+    procedure dsCihazStateChange(Sender: TObject);
+    procedure iptalConfirm(Sender: TObject);
+    procedure UniFrameAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
+  private
+    KAT_ID: integer;
+    procedure DugmeleriAyarla;
+    function GenerateGuid: string;
+    { Private declarations }
+  public
+    { Public declarations }
+    PCihazlarForm: TCihazlarForm;
+  end;
+
+implementation
+
+{$R *.dfm}
+
+
+uses ServerModule, MainModule, Utils;
+
+
+procedure TCihazForm.btnKapatClick(Sender: TObject);
+begin
+  try
+    if qCihaz.State in dsEditModes then
+      iptal.Show
+    else
+    begin
+      if PCihazlarForm<>nil then
+      begin
+        UniMainModule.DataSetRefresh(PCihazlarForm.qCihazlar, 'CIH_ID', qCihaz.FieldByName('CIH_ID').AsInteger);
+        UniMainModule.Focus(PCihazlarForm.txtCihaz);
+      end;
+      UniMainModule.FrameKapat(Self);
+    end;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+function TCihazForm.GenerateGuid: string;
+var
+  s: string;
+begin
+  s := StringReplace(TGUID.NewGuid.ToString, '{', '', [rfReplaceAll]);
+  s := StringReplace(s, '}', '', [rfReplaceAll]);
+  s := StringReplace(s, '-', '', [rfReplaceAll]);
+  Result := s;
+end;
+
+procedure TCihazForm.btnKaydetClick(Sender: TObject);
+begin
+  try
+    if qCihaz.State in dsEditModes then
+    begin
+      if Trim(qCihaz.FieldByName('CIH_ADI').AsString)='' then
+      begin
+        UniMainModule.Notification('', 'Cihaz adýný giriniz', 1);
+        UniMainModule.Focus(txtCihazAdi);
+        exit;
+      end;
+      if Trim(qCihaz.FieldByName('CIH_MAC').AsString)='' then
+      begin
+        UniMainModule.Notification('', 'MAC adresini giriniz', 1);
+        UniMainModule.Focus(txtMAC);
+        exit;
+      end;
+      qCihaz.Post;
+      qCihaz.ParamByName('CIH_ID').AsInteger := qCihaz.FieldByName('CIH_ID').AsInteger;
+      UniMainModule.Notification('', 'Ýþlem Tamamlandý', 3);
+      UniMainModule.Focus(txtCihazAdi);
+    end;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TCihazForm.btnSilClick(Sender: TObject);
+begin
+  try
+    sil.Show;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TCihazForm.btnVazgecClick(Sender: TObject);
+begin
+  try
+    if qCihaz.State in dsEditModes then
+    begin
+      qCihaz.Cancel;
+      if not qCihaz.FieldByName('CIH_ID').IsNull then
+      begin
+        qCihaz.ParamByName('CIH_ID').AsInteger := qCihaz.FieldByName('CIH_ID').AsInteger;
+        UniMainModule.Focus(txtCihazAdi);
+      end
+      else
+      begin
+        if PCihazlarForm<>nil then
+        begin
+          UniMainModule.DataSetRefresh(PCihazlarForm.qCihazlar, 'CIH_ID', qCihaz.FieldByName('CIH_ID').AsInteger);
+          UniMainModule.Focus(PCihazlarForm.txtCihaz);
+        end;
+        UniMainModule.FrameKapat(Self);
+      end;
+    end;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TCihazForm.btnYeniClick(Sender: TObject);
+begin
+  try
+    if qCihaz.State=dsBrowse then
+    begin
+      qCihaz.Append;
+      UniMainModule.Focus(txtCihazAdi);
+    end;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TCihazForm.dsCihazStateChange(Sender: TObject);
+begin
+  DugmeleriAyarla;
+end;
+
+procedure TCihazForm.silConfirm(Sender: TObject);
+begin
+  try
+    qCihaz.Delete;
+    if PCihazlarForm<>nil then
+    begin
+      UniMainModule.DataSetRefresh(PCihazlarForm.qCihazlar, 'CIH_ID', qCihaz.FieldByName('CIH_ID').AsInteger);
+      UniMainModule.Focus(PCihazlarForm.txtKategori);
+    end;
+    UniMainModule.Notification('', 'Kayýt Silindi', 3);
+    UniMainModule.FrameKapat(Self);
+  except on e:exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TCihazForm.UniFrameAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
+begin
+  if EventName = 'esc_pressed' then btnKapatClick(Sender);
+end;
+
+procedure TCihazForm.UniFrameCreate(Sender: TObject);
+begin
+  self.ClientEvents.ExtEvents.Values['afterrender'] := 'function afterrender(sender, eOpts)' +
+         '{' +
+         '   sender.el.on("keydown", function(e){' +
+         '   if (e.getKey() == Ext.EventObject.ESC) {' +
+         '      ajaxRequest(sender, "esc_pressed", []);' +
+         '   }' +
+         '   });' +
+         '}';
+
+  UniMainModule.ButtonMask([btnKaydet, btnVazgec, btnYeni, btnSil, btnKapat]);
+  UniMainModule.SetFocusBlur(TUniFrame(Self));
+
+  CIH_ID := UniMainModule.Tmp_ID;
+  UniMainModule.Tmp_ID := -1;
+
+  try
+    if qCihaz.Active then
+      qCihaz.Close;
+
+    qCihaz.ParamByName('CIH_ID').AsInteger := CIH_ID;
+    qCihaz.Open;
+
+    if CIH_ID=0 then
+    begin
+      qCihaz.Append;
+    end;
+
+    UniMainModule.Focus(txtKategori);
+
+  except on e: exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TCihazForm.DugmeleriAyarla;
+begin
+  try
+    btnKaydet.Visible     := qCihaz.State in dsEditModes;
+    btnVazgec.Visible     := btnKaydet.Visible;
+    btnYeni.Visible       := not btnKaydet.Visible;
+    btnSil.Visible        := not btnKaydet.Visible;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TCihazForm.iptalConfirm(Sender: TObject);
+begin
+  try
+    qCihaz.Cancel;
+    if PCihazlarForm<>nil then
+    begin
+      UniMainModule.DataSetRefresh(PCihazlarForm.qCihazlar, 'CIH_ID', qCihaz.FieldByName('CIH_ID').AsInteger);
+      UniMainModule.Focus(PCihazlarForm.txtKategori);
+    end;
+    UniMainModule.FrameKapat(Self)
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+end.

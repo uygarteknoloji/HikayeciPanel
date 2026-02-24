@@ -1,0 +1,76 @@
+unit ServerModule;
+
+interface
+
+uses
+  Classes, SysUtils, uniGUIServer, uniGUIMainModule, uniGUIApplication, uIdCustomHTTPServer,
+  uniGUITypes, uIdContext, Data.DB, MemDS, DBAccess, Uni, UniProvider,
+  InterBaseUniProvider;
+
+type
+  TUniServerModule = class(TUniGUIServerModule)
+    Data: TUniConnection;
+    ServisDB: TUniConnection;
+    IBP: TInterBaseUniProvider;
+    qKayitInfo: TUniQuery;
+    procedure UniGUIServerModuleCreate(Sender: TObject);
+  private
+    { Private declarations }
+  protected
+    procedure FirstInit; override;
+  public
+    { Public declarations }
+  end;
+
+function UniServerModule: TUniServerModule;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  UniGUIVars;
+
+function UniServerModule: TUniServerModule;
+begin
+  Result := TUniServerModule(UniGUIServerInstance);
+end;
+
+procedure TUniServerModule.FirstInit;
+begin
+  InitServerModule(Self);
+end;
+
+procedure TUniServerModule.UniGUIServerModuleCreate(Sender: TObject);
+begin
+//   Mevcut MIME türü listesine yeni uzantýlarý ekle
+//   .FTL (PDF.js yerelleþtirme dosyasý) tanýmý
+   UniServerModule.MimeTable.AddMimeType('.ftl', 'text/plain');
+//   .MJS (Modern JS Modülü) tanýmý
+   UniServerModule.MimeTable.AddMimeType('.mjs', 'application/javascript');
+//   Eðer .wasm hatasý alýrsanýz ve IIS kullanmýyorsanýz bunu da ekleyin:
+   UniServerModule.MimeTable.AddMimeType('.wasm', 'application/wasm');
+
+   UniServerModule.MIMETable.AddMimeType('hdr', 'image/vnd.radiance');
+   UniServerModule.MIMETable.AddMimeType('glb', 'model/gltf-binary');
+
+//  if SSL.Enabled then
+//  begin
+//    SSL.SSLOptions.RootCertFile :=  UniServerModule.StartPath + 'root.pem';
+//    SSL.SSLOptions.CertFile :=  UniServerModule.StartPath + 'cert.pem';
+//    SSL.SSLOptions.KeyFile :=  UniServerModule.StartPath + 'key.pem';
+//    //SSL.SSLOptions.CipherList := GetCipherList(4);
+//    //SSL.SSLOptions.CipherList := GetCipherList(5);
+//  end;
+
+  ServisDB.ProviderName := 'InterBase';
+  ServisDB.Database := ExtractFilePath(Application.ExeName) + 'files\veri\ServisDB.fdb';
+  ServisDB.Username := 'SYSDBA';
+  ServisDB.Password := 'masterke';
+  ServisDB.SpecificOptions.Values['Charset'] := 'WIN1254';
+  ServisDB.SpecificOptions.Values['SQLDialect'] := '3';
+end;
+
+initialization
+  RegisterServerModuleClass(TUniServerModule);
+end.

@@ -1,0 +1,810 @@
+unit MainModule;
+
+interface
+
+uses
+  uniGUIMainModule, SysUtils, StrUtils, Classes, DB, DBClient, ADODB, uniGUITypes,
+  uniGUIClasses, uniSweetAlert, uniGUIBaseClasses, uniImageList, UniProvider, UniBitBtn,
+  InterBaseUniProvider, DBAccess, Uni, uniDBGrid, UniEdit, UniDBEdit, Forms, UniGUIFrame,
+  MemDS, uniToast, unimToast, Logger, Hash, DateUtils;
+
+type
+  TKullaniciRolu = (
+    krYonetici,
+    krEditor,
+    krOnayci,
+    krStandart
+  );
+
+const
+  EYLEM_GORUNTULE = 'G';
+  EYLEM_REVIZYON  = 'R';
+  EYLEM_SIL       = 'S';
+  EYLEM_INDIR_YAZ = 'Y';
+  EYLEM_ONAYLA    = 'O';
+
+const
+  DURUM_TASLAK      = 'Taslak';
+  DURUM_ONAY_BEKLEN = 'OnayBekleyen';
+  DURUM_YAYINLANMIS = 'Yayinlanmis';
+  DURUM_ARSIVLENMIS = 'Arsivlenmis';
+
+const
+  GIZLILIK_GENEL = 'Genel';
+  GIZLILIK_KURUM_ICI = 'KurumIci';
+  GIZLILIK_COK_GIZLI = 'CokGizli';
+
+type
+  TUniMainModule = class(TUniGUIMainModule)
+    ikonListe: TUniImageList;
+    mesaj: TUniSweetAlert;
+    Ulkeler: TUniImageList;
+    OkCancel: TUniImageList;
+    procedure UniGUIMainModuleCreate(Sender: TObject);
+  private
+    { Private declarations }
+    FCacheInited: Boolean;
+    FolderPath: string;
+  public
+    { Public declarations }
+    FAuthToken: string;
+    FAuthExpiry: TDateTime;
+    isLogin: boolean;
+    FirstName, LastName : string;
+    CommonPath : string;
+    ID: integer;
+    Form_ID: integer;
+    KUL_ID: integer;
+    KUL_GUID: string;
+    KUL_DURUM: integer;
+    KUL_ADI: string;
+    KUL_SOYADI: string;
+    KUL_ADI_SOYADI: string;
+    KUL_EMAIL: string;
+    KUL_TURU: integer;
+    KUL_ROLU: string;
+    KUL_DYS_ROLU: string;
+    KUL_BASTARIHI: TDateTime;
+    KUL_BITTARIHI: TDateTime;
+    KUL_FRM_ID: integer;
+    FRM_ID: integer;
+    FRM_GUID: string;
+    FRM_WATERMARK: string;
+    FRM_ADI: string;
+    Duyurular: string;
+    Tmp_ID, Tmp_ID_2, Tmp_ID_3, Tmp_ID_4, Tmp_ID_5, Tmp_Form_Sec: integer;
+    Tmp_Kod, Tmp_Kod_2, Tmp_Kod_3, Tmp_Kod_4, Tmp_Kod_5: string;
+    Tmp_Ad, Tmp_Ad_2, Tmp_Ad_3, Tmp_Ad_4, Tmp_Ad_5: string;
+    Logger: TLogger;
+    Tmp_Query: TUniQuery;
+    SessionToken: string;
+    procedure Focus(Obj: TComponent);
+    procedure KayitBilgi(K, D, K_ZAMAN, D_ZAMAN: string);
+    procedure Notification(pTitle, pMessage: String; pState: integer);
+    procedure SetFocusBlur(fr: TUniFrame);
+    procedure FormReady(Sender: TObject);
+    procedure FormAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
+    procedure FrameKapat(F: TUniFrame);
+    procedure ButtonMask(Btn: array of TUniBitBtn);
+    procedure ListeKaydet(Form_ID: integer; Liste_Adi: string; Query: TUniQuery; Grid: TUniDBGrid);
+    procedure ListeVarsayilan(Form_ID: integer);
+    procedure ListeYukle(Form_ID: integer; Grid: TUniDBGrid);
+    procedure Sort(const DataSet: TDataset; const FieldName: string; Dir: Boolean);
+    procedure DataSetRefresh(DataSet: TDataSet; ID_Field: string; ID: integer);
+    procedure MainMenuVisible(status: boolean);
+    procedure Dokuman_Log(DOK_ID, KUL_ID: integer; Islem, Aciklama: String);
+    function  SendMail(const ATo, ASubject, ABody: string): boolean;
+    function  SendMail_BrevoAPI(const ATo, ASubject, ABody: string): Boolean;
+    function  YetkiKontrolEt(const KullaniciRolu: TKullaniciRolu; const DokumanDurumu: string; const GizlilikSeviyesi: string; const IstenenEylem: string): Boolean;
+    function  GenerateGuid: string;
+  end;
+
+
+
+function UniMainModule: TUniMainModule;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  UniGUIVars, ServerModule, uniGUIApplication,  uniGUIUtils, uniStrUtils,
+  IdSMTP, IdMessage, IdSSLOpenSSL, IdExplicitTLSClientServerBase, IdText,
+  Windows, Main, UniGuiForm, UniPageControl, Utils, KayitBilgi,
+  IdHTTP, System.JSON, System.NetEncoding;
+
+const
+  DokumanGizlilikDuzeyleri: array[0..3] of string = ('Genel', 'Kurum Ýçi', 'Gizli', 'Çok Gizli');
+  DokumanYasamDongusu: array[0..3] of string = ('Taslak', 'Onay Bekleyen', 'Yayýnlandý', 'Arþivlendi');
+
+function UniMainModule: TUniMainModule;
+begin
+  Result := TUniMainModule(UniApplication.UniMainModule)
+end;
+
+
+function TUniMainModule.GenerateGuid: string;
+var
+  s: string;
+begin
+  s := StringReplace(TGUID.NewGuid.ToString, '{', '', [rfReplaceAll]);
+  s := StringReplace(s, '}', '', [rfReplaceAll]);
+  s := StringReplace(s, '-', '', [rfReplaceAll]);
+  Result := s;
+end;
+
+procedure TUniMainModule.Focus(Obj: TComponent);
+begin
+  if obj.ClassNameIs('TUniDBGrid') then
+  begin
+    UniSession.AddJS('setTimeout(function(){'+ TUniDBGrid(Obj).JSName +'.getView().focusRow(0)}, 100)')
+  end
+  else
+    UniSession.AddJS('setTimeout(function(){'+ TUniEdit(Obj).JSName +'.focus()}, 100)');
+end;
+
+procedure TUniMainModule.Dokuman_Log(DOK_ID, KUL_ID: integer; Islem, Aciklama: String);
+var
+  q: TUniQuery;
+begin
+  try
+    q := TUniQuery.Create(UniApplication);
+    try
+      q.Connection := UniServerModule.Data;
+      q.KeyFields := 'DL_ID';
+      q.SpecificOptions.Values['KeyGenerator'] := 'GEN_DOKUMAN_LOG_ID';
+      q.Close;
+      q.SQL.Clear;
+      q.SQL.Add('Select * From DOKUMAN_LOG Where DL_ID=-1');
+      q.Open;
+      q.Append;
+      q.FieldByName('DL_DOK_ID').AsInteger  := DOK_ID;
+      q.FieldByName('DL_KUL_ID').AsInteger  := KUL_ID;
+      q.FieldByName('DL_ISLEM').AsString    := Islem;
+      q.FieldByName('DL_ACIKLAMA').AsString := Aciklama;
+      q.Post;
+    finally
+      begin
+        q.Close;
+        FreeAndNil(q);
+      end;
+    end;
+  except on E: Exception do
+    Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TUniMainModule.MainMenuVisible(status: boolean);
+begin
+  if status then
+  begin
+    UniSession.AddJS(
+      'MainmForm.UnimMenu1.ButtonItem0.enable();' +
+      'MainmForm.UnimMenu1.ButtonItem1.enable();' +
+      'MainmForm.UnimMenu1.ButtonItem2.enable();' +
+      'MainmForm.UnimMenu1.ButtonItem3.enable();' +
+      'MainmForm.UnimMenu1.ButtonItem4.enable();' +
+      'MainmForm.UnimMenu1.ButtonItem5.enable();'
+    );
+  end
+  else
+  begin
+    UniSession.AddJS(
+      'MainmForm.UnimMenu1.ButtonItem0.disable();' +
+      'MainmForm.UnimMenu1.ButtonItem1.disable();' +
+      'MainmForm.UnimMenu1.ButtonItem2.disable();' +
+      'MainmForm.UnimMenu1.ButtonItem3.disable();' +
+      'MainmForm.UnimMenu1.ButtonItem4.disable();' +
+      'MainmForm.UnimMenu1.ButtonItem5.disable();'
+    );
+  end;
+end;
+
+procedure TUniMainModule.DataSetRefresh(DataSet: TDataSet; ID_Field: string; ID: integer);
+begin
+  try
+    Dataset.Close;
+    Dataset.Open;
+    Dataset.Locate(ID_Field, ID, []);
+  except on E: Exception do
+    Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TUniMainModule.Sort(const DataSet: TDataset;const FieldName: string; Dir: Boolean);
+begin
+  if Dir then
+    TUniQuery(DataSet).IndexFieldNames := FieldName + ' ASC'
+  else
+    TUniQuery(DataSet).IndexFieldNames := FieldName + ' DESC';
+end;
+
+
+procedure TUniMainModule.ListeVarsayilan(Form_ID: integer);
+var
+  q: TUniQuery;
+begin
+  q := TUniQuery.Create(nil);
+  try
+    try
+      q.Close;
+      q.Connection := UniServerModule.Data;
+      q.KeyFields := 'LIS_ID';
+      q.SpecificOptions.Values['KeyGenerator'] := 'GEN_LISTELER_ID';
+      q.SQL.Clear;
+      q.SQL.Add('Select * From LISTELER');
+      q.SQL.Add('Where LIS_KUL_ID=:LIS_KUL_ID and LIS_FRM_ID=:LIS_FRM_ID');
+      q.ParamByName('LIS_KUL_ID').AsInteger := UniMainModule.KUL_ID;
+      q.ParamByName('LIS_FRM_ID').AsInteger := Form_ID;
+      q.Open;
+
+      if not q.FieldByName('LIS_ID').IsNull then
+        q.Delete;
+      UniMainModule.Notification('', 'Liste görünümü sýfýrlandý', 3);
+    except on e: exception do
+      UniMainModule.Notification('Hata', HataMesaj(e.Message), 2);
+    end;
+  finally
+    q.Close;
+    q.Free;
+  end;
+end;
+
+
+procedure TUniMainModule.ListeKaydet(Form_ID: integer; Liste_Adi: string; Query: TUniQuery; Grid: TUniDBGrid);
+var
+  I, ID: integer;
+  q: TUniQuery;
+begin
+  q := TUniQuery.Create(nil);
+  try
+    try
+      q.Close;
+      q.Connection := UniServerModule.Data;
+      q.KeyFields := 'LIS_ID';
+      q.SpecificOptions.Values['KeyGenerator'] := 'GEN_LISTELER_ID';
+      q.SQL.Clear;
+      q.SQL.Add('Select * From LISTELER');
+      q.SQL.Add('Where LIS_KUL_ID=:LIS_KUL_ID and LIS_FRM_ID=:LIS_FRM_ID');
+      q.ParamByName('LIS_KUL_ID').AsInteger := UniMainModule.KUL_ID;
+      q.ParamByName('LIS_FRM_ID').AsInteger := Form_ID;
+      q.Open;
+
+      if not q.FieldByName('LIS_ID').IsNull then
+        q.Delete;
+
+      q.Append;
+      q.FieldByName('LIS_KUL_ID').AsInteger := UniMainModule.KUL_ID;
+      q.FieldByName('LIS_FRM_ID').AsInteger := Form_ID;
+      q.FieldByName('LIS_SQL').AsString := Query.SQL.Text;
+      q.FieldByName('LIS_AD').AsString := Liste_Adi;
+      q.Post;
+      ID := q.FieldByName('LIS_ID').AsInteger;
+
+      q.Close;
+      q.KeyFields := 'LSA_ID';
+      q.SpecificOptions.Values['KeyGenerator'] := 'GEN_LISTE_ALANLAR_ID';
+      q.SQL.Clear;
+      q.SQL.Add('Select * From LISTE_ALANLAR');
+      q.SQL.Add('Where LSA_LIS_ID=:LSA_LIS_ID');
+      q.ParamByName('LSA_LIS_ID').AsInteger := ID;
+      q.Open;
+      for I := 0 to Grid.Columns.Count - 1 do
+      begin
+        q.Append;
+        q.FieldByName('LSA_LIS_ID').AsInteger := ID;
+        q.FieldByName('LIS_SIRA_NO').AsInteger := I + 1;
+        if Grid.Columns[I].Visible then
+          q.FieldByName('LSA_DURUM').AsInteger := 1
+        else
+          q.FieldByName('LSA_DURUM').AsInteger := 0;
+        if Grid.Columns[I].Locked then
+          q.FieldByName('LSA_KILIT').AsInteger := 1
+        else
+          q.FieldByName('LSA_KILIT').AsInteger := 0;
+        q.FieldByName('LSA_ALAN_ADI').AsString := Grid.Columns[I].FieldName;
+        q.FieldByName('LSA_BASLIK').AsString := Grid.Columns[I].Title.Caption;
+        q.FieldByName('LSA_GRUP').AsString := Grid.Columns[I].GroupHeader;
+        if Grid.Columns[I].ShowSummary then
+          q.FieldByName('LSA_TOPLAM').AsInteger := 1
+        else
+          q.FieldByName('LSA_TOPLAM').AsInteger := 0;
+        q.FieldByName('LSA_GENISLIK').AsInteger := Grid.Columns[I].Width;
+        if Grid.Columns[I].Alignment = taLeftJustify then
+          q.FieldByName('LSA_HIZALA').AsString := 'Sol'
+        else if Grid.Columns[I].Alignment = taRightJustify then
+          q.FieldByName('LSA_HIZALA').AsString := 'Sað'
+        else if Grid.Columns[I].Alignment = taCenter then
+          q.FieldByName('LSA_HIZALA').AsString := 'Orta';
+
+        if Grid.Columns[I].CheckBoxField.BooleanFieldOnly=false then
+        begin
+          q.FieldByName('LSA_TURU').AsString := 'Mantýksal';
+          q.FieldByName('LSA_BICIM').AsString := Grid.Columns[I].CheckBoxField.DisplayValues;;
+        end
+        else
+        if Grid.Columns[I].Alignment=taRightJustify then
+        begin
+          q.FieldByName('LSA_TURU').AsString := 'Sayý';
+        end
+        else
+          q.FieldByName('LSA_TURU').AsString := 'Metin';
+
+        q.Post;
+      end;
+      UniMainModule.Notification('', 'Liste görünümü kaydedildi', 3);
+    except on e: exception do
+      UniMainModule.Notification('', HataMesaj(e.Message), 2);
+    end;
+  finally
+    q.Close;
+    q.Free;
+  end;
+end;
+
+procedure TUniMainModule.Notification(pTitle, pMessage:String; pState: integer);
+var
+ vJS: String;
+begin
+  pMessage := StringReplace(pMessage, '''', '', [rfReplaceAll]);
+  pMessage := StringReplace(pMessage, '"', '', [rfReplaceAll]);
+  pMessage := StringReplace(pMessage, Chr(13), '', [rfReplaceAll]);
+  if pState=1 then
+    mesaj.alertType := TAlertType.atWarning
+  else
+  if pState=2 then
+    mesaj.alertType := TAlertType.atError
+  else
+  if pState=3 then
+    mesaj.alertType := TAlertType.atSuccess;
+  mesaj.confirmButtonText := 'Tamam';
+  mesaj.cancelButtonText := 'Ýptal';
+  mesaj.AllowOutsideClick := true;
+  mesaj.AllowEscapeKey := true;
+  mesaj.showConfirmButton := false;
+  mesaj.showCancelButton := false;
+  mesaj.TimerMS := 3000;
+  mesaj.Title := pTitle;
+  mesaj.Html := pMessage;
+  mesaj.Show;
+end;
+
+
+procedure TUniMainModule.ListeYukle(Form_ID: integer; Grid: TUniDBGrid);
+var
+  I: integer;
+  q: TUniQuery;
+begin
+  q := TUniQuery.Create(nil);
+  try
+    try
+      q.Close;
+      q.Connection := UniServerModule.Data;
+//      q.UpdateOptions.KeyFields := 'LIS_ID';
+//      q.UpdateOptions.AutoIncFields := 'LIS_ID';
+//      q.UpdateOptions.GeneratorName := 'GEN_LISTELER_ID';
+      q.SQL.Clear;
+      q.SQL.Add('Select LISTE_ALANLAR.* From LISTELER, LISTE_ALANLAR');
+      q.SQL.Add('Where (LSA_LIS_ID=LIS_ID)and(LIS_KUL_ID=:LIS_KUL_ID)and(LIS_FRM_ID=:LIS_FRM_ID)');
+      q.SQL.Add('Order By LIS_SIRA_NO');
+      q.ParamByName('LIS_KUL_ID').AsInteger := UniMainModule.KUL_ID;
+      q.ParamByName('LIS_FRM_ID').AsInteger := Form_ID;
+      q.Open;
+      if q.IsEmpty then exit;
+      Grid.Columns.Clear;
+      while not q.Eof do
+      begin
+        with Grid.Columns.Add do
+        begin
+          if q.FieldByName('LSA_DURUM').AsInteger=0 then
+            Visible := false
+          else
+            Visible := true;
+          if q.FieldByName('LSA_KILIT').AsInteger=0 then
+            Locked := false
+          else
+            Locked := true;
+          FieldName := q.FieldByName('LSA_ALAN_ADI').AsString;
+          Title.Caption := q.FieldByName('LSA_BASLIK').AsString;
+          GroupHeader := q.FieldByName('LSA_GRUP').AsString;
+          Width := q.FieldByName('LSA_GENISLIK').AsInteger;
+          if q.FieldByName('LSA_TOPLAM').AsInteger=0 then
+            ShowSummary := false
+          else
+            ShowSummary := true;
+          if q.FieldByName('LSA_HIZALA').AsString = 'Sol' then
+          begin
+            Alignment := taLeftJustify;
+            Title.Alignment := taLeftJustify;
+          end
+          else
+          if q.FieldByName('LSA_GENISLIK').AsString = 'Sað' then
+          begin
+            Alignment := taRightJustify;
+            Title.Alignment := taRightJustify;
+          end
+          else
+          if q.FieldByName('LSA_GENISLIK').AsString = 'Orta' then
+          begin
+            Alignment := taCenter;
+            Title.Alignment := taCenter;
+          end;
+          if q.FieldByName('LSA_TURU').AsString='Mantýksal' then
+          begin
+            CheckBoxField.BooleanFieldOnly := false;
+            CheckBoxField.Enabled := true;
+            CheckBoxField.DisplayValues := q.FieldByName('LSA_BICIM').AsString;
+            CheckBoxField.FieldValues := '1;0';
+          end
+          else
+          if q.FieldByName('LSA_TURU').AsString='Sayý' then
+          begin
+            Alignment := taRightJustify;
+            Title.Alignment := taRightJustify;
+          end;
+          if q.FieldByName('LSA_TURU').AsString='Resim' then
+          begin
+            ImageOptions.Visible := true;
+            ImageOptions.Width := 50;
+            ImageOptions.Height := 50;
+          end;
+        end;
+        q.Next;
+      end;
+    except on e: exception do
+      UniMainModule.Notification('', HataMesaj(e.Message), 2);
+    end;
+  finally
+    q.Close;
+    q.Free;
+  end;
+end;
+
+
+function TUniMainModule.SendMail_BrevoAPI(const ATo, ASubject, ABody: string): Boolean;
+var
+  HTTP: TIdHTTP;
+  SSL: TIdSSLIOHandlerSocketOpenSSL;
+  JSONBody: TStringStream;
+  JObject, SenderObj, ToObj: TJSONObject;
+  ToArray: TJSONArray;
+begin
+  Result := False;
+  HTTP := TIdHTTP.Create(nil);
+  SSL := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+  JSONBody := nil;
+  JObject := TJSONObject.Create;
+  SenderObj := TJSONObject.Create;
+  ToArray := TJSONArray.Create;
+  ToObj := TJSONObject.Create;
+
+  try
+
+    // --- Mail Gövdesi oluþtur ---
+    SenderObj.AddPair('name', 'Uygar Teknoloji');
+    SenderObj.AddPair('email', 'no-reply@uygarteknoloji.com.tr');
+
+    ToObj.AddPair('email', ATo);
+    ToArray.AddElement(ToObj);
+
+    JObject.AddPair('sender', SenderObj);
+    JObject.AddPair('to', ToArray);
+    JObject.AddPair('subject', ASubject);
+    JObject.AddPair('htmlContent', ABody);
+
+    JSONBody := TStringStream.Create(JObject.ToJSON, TEncoding.UTF8);
+
+    // --- HTTP Ayarlarý ---
+    SSL := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+    SSL.SSLOptions.SSLVersions := [sslvTLSv1_2];  // sadece TLS 1.2
+    HTTP.IOHandler := SSL;
+    HTTP.Request.CustomHeaders.Clear;
+    HTTP.Request.CustomHeaders.AddValue('accept', 'application/json');
+    //Http.Request.CustomHeaders.Values['api-key'] := 'xsmtpsib-23bf6a047ae7148a9a5a608a1b800ba55f5f7afc1a19bafdcc9038f5eac25f84-6CArzK5qdDO9mQw1';
+    HTTP.Request.CustomHeaders.AddValue('api-key', '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');
+    //HTTP.Request.CustomHeaders.AddValue('smtp-key', 'xsmtpsib-23bf6a047ae7148a9a5a608a1b800ba55f5f7afc1a19bafdcc9038f5eac25f84-6CArzK5qdDO9mQw1');
+    HTTP.Request.ContentType := 'application/json';
+
+    // --- Gönderim ---
+    try
+      HTTP.Post('https://api.brevo.com/v3/smtp/email', JSONBody);
+      Result := True;
+    except
+      on E: Exception do
+      begin
+        // Hata durumunda log yazdýr
+        Writeln('Mail gönderimi hatasý: ' + E.Message);
+      end;
+    end;
+
+  finally
+    FreeAndNil(ToObj);
+    FreeAndNil(JSONBody);
+    FreeAndNil(SenderObj);
+    FreeAndNil(SSL);
+    FreeAndNil(HTTP);
+  end;
+end;
+
+function TUniMainModule.SendMail(const ATo, ASubject, ABody: string): boolean;
+var
+  SMTP: TIdSMTP;
+  SSL: TIdSSLIOHandlerSocketOpenSSL;
+  Msg: TIdMessage;
+begin
+  Result := False;
+  SMTP := TIdSMTP.Create(nil);
+  Msg := TIdMessage.Create(nil);
+  SSL := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+  try
+    // SSL Ayarlarý
+    SSL.SSLOptions.Method := sslvTLSv1_2;
+    SSL.SSLOptions.Mode := sslmClient;
+
+    SMTP.IOHandler := SSL;
+    SMTP.Host := 'smtp-relay.brevo.com';
+    SMTP.Port := 587;
+    SMTP.Username := '987b28001@smtp-brevo.com';
+    SMTP.Password := 'xsmtpsib-23bf6a047ae7148a9a5a608a1b800ba55f5f7afc1a19bafdcc9038f5eac25f84-6CArzK5qdDO9mQw1';    // SMTP Key
+    SMTP.UseTLS := utUseExplicitTLS;
+
+    // Mail
+    Msg.ContentType := 'text/html; charset=UTF-8';
+    Msg.CharSet := 'UTF-8';
+    Msg.From.Address := 'no-reply@uygarteknoloji.com.tr'; // doðrulanmýþ olmalý
+    Msg.From.Name := 'Uygar Teknoloji';
+    Msg.Recipients.EmailAddresses := ATo;
+    Msg.Subject := ASubject;
+    Msg.Body.Text := ABody;
+
+    // Gönder
+    SMTP.Connect;
+    try
+      SMTP.Send(Msg);
+      Result := True;
+    finally
+      SMTP.Disconnect;
+    end;
+  finally
+    SSL.Free;
+    Msg.Free;
+    SMTP.Free;
+  end;
+end;
+
+procedure TUniMainModule.ButtonMask(Btn: array of TUniBitBtn);
+var
+  ParamIndex, I: integer;
+begin
+  for I := Low(Btn) to High(Btn) do
+  begin
+    Btn[I].ScreenMask.Message := 'Lütfen Bekleyiniz...';
+    Btn[I].ScreenMask.Enabled := true;
+    Btn[I].ScreenMask.WaitData := true;
+    Btn[I].ScreenMask.Target := Main.MainForm;
+  end;
+end;
+
+
+procedure TUniMainModule.KayitBilgi(K, D: string; K_ZAMAN, D_ZAMAN: string);
+var
+  FKayitBilgiForm: TKayitBilgiForm;
+begin
+  if Trim(K)<>'' then
+  begin
+    UniServerModule.qKayitInfo.Close;
+    UniServerModule.qKayitInfo.ParamByName('KUL_ID').AsInteger := StrToInt(K);
+    UniServerModule.qKayitInfo.Open;
+    K := UniServerModule.qKayitInfo.FieldByName('KUL_ADI_SOYADI').AsString;
+  end;
+  if Trim(D)<>'' then
+  begin
+    UniServerModule.qKayitInfo.Close;
+    UniServerModule.qKayitInfo.ParamByName('KUL_ID').AsInteger := StrToInt(D);
+    UniServerModule.qKayitInfo.Open;
+    D := UniServerModule.qKayitInfo.FieldByName('KUL_ADI_SOYADI').AsString;
+  end;
+  FKayitBilgiForm := TKayitBilgiForm.Create(UniApplication);
+  FKayitBilgiForm.K := K;
+  FKayitBilgiForm.D := D;
+  FKayitBilgiForm.K_ZAMAN := K_ZAMAN;
+  FKayitBilgiForm.D_ZAMAN := D_ZAMAN;
+  FKayitBilgiForm.ShowModal;
+end;
+
+
+procedure TUniMainModule.FrameKapat(F: TUniFrame);
+var
+  I: Integer;
+  T: TUniTabSheet;
+  Baslik: TStringList;
+begin
+  T := TUniTabSheet(F.Parent);
+  F.Destroy;
+  F := nil;
+  try
+    if T.ControlCount>0 then
+      T.Controls[T.ControlCount-1].Visible := true;
+    T.Caption := StringReplace (T.Caption, ' > ', ',', [rfReplaceAll]);
+    Baslik := TStringList.Create;
+    SplitString(Baslik, T.Caption, ',');
+    if Baslik.Count=1 then
+      T.Destroy
+    else
+    begin
+      T.Caption := '';
+      Baslik.Delete(Baslik.Count-1);
+      for I := 0 to Baslik.Count - 1 do
+        T.Caption := T.Caption + Baslik.Strings[I] + ' > ';
+      T.Caption := LeftStr(T.Caption, Length(T.Caption) - 3);
+    end;
+  finally
+    Baslik.Free;
+  end;
+end;
+
+
+
+procedure TUniMainModule.UniGUIMainModuleCreate(Sender: TObject);
+var
+  Tm : string;
+begin
+  //SessionToken := TNetEncoding.Base64.Encode('UID-' + UniSession.SessionId + '-' + FormatDateTime('yyyymmddhhnnsszzz', Now));
+
+  with (UniApplication as TUniGUIApplication) do
+  begin
+    if UniSession.SSL then
+    begin
+      Cookies.DefaultSameSite := 'None'; // so cookies can be saved when demo runs inside an iframe (Modern browsers need it)
+      Cookies.SecureOverSSL := True;
+    end;
+
+    Tm := Parameters.Values['xtheme'];
+    if SameText(Tm, 'random') then
+    begin
+      case Random(10) of
+        0 : Tm := 'uni_sencha';
+        1 : Tm := 'uni_sencha';
+        2 : Tm := 'uni_sencha';
+        3 : Tm := 'neptune';
+        4 : Tm := 'neptune';
+        5 : Tm := 'neptune';
+        6 : Tm := 'uni_sencha2';
+        7 : Tm := 'uni_sencha2';
+        8 : Tm := 'uni_sencha_flat';
+        9 : Tm := 'uni_sencha_flat';
+      end;
+    end;
+    if Tm <> '' then Theme := Tm;
+  end;
+
+  Logger := TLogger.Create(UniApplication);
+  Logger.FilePath := ExtractFilePath(Application.ExeName) + 'files\logs\log.txt';
+
+end;
+
+
+
+function TUniMainModule.YetkiKontrolEt(const KullaniciRolu: TKullaniciRolu; const DokumanDurumu, GizlilikSeviyesi, IstenenEylem: string): Boolean;
+begin
+Result := False;
+  if KullaniciRolu = krYonetici then
+  begin
+    Result := True;
+    Exit;
+  end;
+  case KullaniciRolu of // krYonetici dýþarýda kontrol edildiði için burada baþlamasý sorunsuz.
+    krEditor:
+      begin
+        if IstenenEylem = EYLEM_GORUNTULE then
+        begin
+          Result := (DokumanDurumu <> DURUM_ARSIVLENMIS);
+        end
+        else if IstenenEylem = EYLEM_REVIZYON then
+        begin
+          Result := (DokumanDurumu = DURUM_TASLAK) or
+                    ((DokumanDurumu = DURUM_YAYINLANMIS) and (GizlilikSeviyesi = GIZLILIK_KURUM_ICI));
+        end
+        else if IstenenEylem = EYLEM_SIL then
+        begin
+          Result := DokumanDurumu = DURUM_TASLAK;
+        end
+        else if IstenenEylem = EYLEM_INDIR_YAZ then
+        begin
+          Result := DokumanDurumu = DURUM_TASLAK;
+        end;
+      end;
+    krOnayci:
+      begin
+        if IstenenEylem = EYLEM_GORUNTULE then
+        begin
+          Result := (DokumanDurumu <> DURUM_ARSIVLENMIS);
+        end
+        else if IstenenEylem = EYLEM_ONAYLA then
+        begin
+          Result := DokumanDurumu = DURUM_ONAY_BEKLEN;
+        end;
+      end;
+    krStandart:
+      begin
+        if IstenenEylem = EYLEM_GORUNTULE then
+        begin
+          Result := (DokumanDurumu = DURUM_YAYINLANMIS) and
+                    (GizlilikSeviyesi <> GIZLILIK_COK_GIZLI);
+        end
+        else if IstenenEylem = EYLEM_INDIR_YAZ then
+        begin
+          Result := (DokumanDurumu = DURUM_YAYINLANMIS) and
+                    (GizlilikSeviyesi = GIZLILIK_GENEL);
+        end;
+      end;
+  end;
+end;
+
+
+
+
+procedure TUniMainModule.SetFocusBlur(fr: TUniFrame);
+var
+  I: integer;
+  f, b: string;
+begin
+  f := 'function (sender, e, eOpts) { sender.setFieldStyle("background-color:yellow; background-image:none;"); sender.selectText(); }';
+  b := 'function (sender, e, eOpts) { sender.setFieldStyle("background-color:white; background-image:none;");   }';
+  for I := 0 to fr.ComponentCount-1 do
+  begin
+    if fr.Components[I].ClassNameIs('TUniDBEdit')or
+       fr.Components[I].ClassNameIs('TUniEdit')or
+       fr.Components[I].ClassNameIs('TUniDBMemo')or
+       fr.Components[I].ClassNameIs('TUniDBLookupComboBox')or
+       fr.Components[I].ClassNameIs('TUniDBNumberEdit')or
+       fr.Components[I].ClassNameIs('TUniNumberEdit')or
+       fr.Components[I].ClassNameIs('TUniDateTimePicker')or
+       fr.Components[I].ClassNameIs('TUniDBDateTimePicker')or
+       fr.Components[I].ClassNameIs('TUniTagField')or
+       fr.Components[I].ClassNameIs('TUniDBComboBox')or
+       fr.Components[I].ClassNameIs('TUniComboBox') then
+    begin
+      TUniEdit(fr.Components[I]).ClientEvents.ExtEvents.Values['focus'] := f;
+      TUniEdit(fr.Components[I]).ClientEvents.ExtEvents.Values['blur']  := b;
+    end;
+  end;
+end;
+
+procedure TUniMainModule.FormAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
+var
+  Orientation: string;
+  Width, Height: Integer;
+begin
+  if EventName = 'orientation' then
+  begin
+    Orientation := Params.Values['value'];
+    Width := StrToIntDef(Params.Values['width'], 0);
+    Height := StrToIntDef(Params.Values['height'], 0);
+    (Sender as TUniForm).Width := Width;
+    (Sender as TUniForm).Height := Height;
+  end;
+end;
+
+procedure TUniMainModule.FormReady(Sender: TObject);
+begin
+  UniSession.AddJS(
+    'function detectOrientation_' + (Sender as TUniForm).Name + '(){' +
+      'var w = window.innerWidth;' +
+      'var h = window.innerHeight;' +
+      'var orientation = (w > h) ? "landscape" : "portrait";' +
+      'ajaxRequest(' + (Sender as TUniForm).JSInterface.JSName + ', "orientation", [' +
+        '"value=" + orientation,' +
+        '"width=" + w,' +
+        '"height=" + h' +
+      ']);' +
+    '}' +
+    'window.addEventListener("resize", detectOrientation_' + (Sender as TUniForm).Name + ');' +
+    'detectOrientation_' + (Sender as TUniForm).Name + '();'
+  );
+end;
+
+
+initialization
+  RegisterMainModuleClass(TUniMainModule);
+end.

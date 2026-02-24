@@ -1,0 +1,235 @@
+object LoginForm: TLoginForm
+  Left = 0
+  Top = 0
+  ClientHeight = 274
+  ClientWidth = 569
+  Caption = ''
+  Color = 2565927
+  OnShow = UniFormShow
+  BorderStyle = bsNone
+  OldCreateOrder = False
+  BorderIcons = []
+  MonitoredKeys.Keys = <>
+  Script.Strings = (
+    'function AnimateForm(frm)'
+    '{          '
+    
+      '   TweenLite.set($('#39'#'#39'+frm), {scale:0.5, rotationX:70, autoAlpha' +
+      ':0, y:-300, z:-500, transformPerspective:600, display:"block"});'
+    
+      #9'TweenLite.to($('#39'#'#39'+frm), 0.95, {autoAlpha:1, scale:1, ease:Back' +
+      '.easeOut.config(1.5), delay:0.1});'
+    
+      #9'TweenLite.to($('#39'#'#39'+frm), 1.1, {rotationX:0, y:0, z:0, ease:Back' +
+      '.easeOut.config(1), delay:0.15, clearProps:"transform"}); '
+    '}'
+    ''
+    'function AnimateFormImage(frm)'
+    '{         '
+    '   AnimateForm(LoginForm.form.id); '
+    
+      '   TweenLite.to($('#39'#'#39'+frm), 0.7, {autoAlpha:1, rotationY:360, tr' +
+      'ansformOrigin:"50% 50% -35px", delay:1});     '
+    '}'
+    ''
+    'function AnimateButton(frm)'
+    '{          '
+    
+      '   TweenLite.set($('#39'#'#39'+frm),{scale:0.1, rotation:0, autoAlpha:0}' +
+      ');'
+    #9'TweenLite.to($('#39'#'#39'+frm), 0.7, {autoAlpha:1, delay:0.7});   '
+    
+      '   TweenLite.to($('#39'#'#39'+frm), 0.7, {scale:1, ease:Linear.easeNone,' +
+      ' autoRound:false, delay:0.7});'#9'  '#9#9'     '
+    '}')
+  ClientEvents.ExtEvents.Strings = (
+    
+      'window.show=function window.show(sender, eOpts)'#13#10'{'#13#10'  AnimateFor' +
+      'mImage(LoginForm.logo.id);'#13#10'}')
+  ClientEvents.UniEvents.Strings = (
+    
+      'window.beforeInit=function window.beforeInit(sender, config)'#13#10'{'#13 +
+      #10'  config.baseCls='#39'frmNoBorderRadius formshadow'#39';'#13#10'  config.cls=' +
+      #39'frmNoBorderRadius formshadow'#39';'#13#10'}')
+  OnCreate = UniFormCreate
+  TextHeight = 15
+  object UniContainerPanel1: TUniContainerPanel
+    Left = 0
+    Top = 0
+    Width = 569
+    Height = 274
+    Hint = ''
+    ParentColor = False
+    Color = 2565927
+    Align = alClient
+    ClientEvents.UniEvents.Strings = (
+      
+        'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'  config.base' +
+        'Cls='#39'LoginForm'#39';'#13#10'  config.cls='#39'LoginForm'#39';'#13#10'}')
+    TabOrder = 0
+    object lblKulAdi: TUniLabel
+      Left = 242
+      Top = 140
+      Width = 38
+      Height = 19
+      Hint = ''
+      Caption = 'eMail'
+      ParentFont = False
+      Font.Color = clWhite
+      Font.Height = -16
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentColor = False
+      Color = clWhite
+      TabOrder = 1
+    end
+    object txtKulAdi: TUniEdit
+      Left = 311
+      Top = 138
+      Width = 233
+      Height = 23
+      Hint = ''
+      MaxLength = 120
+      Text = ''
+      ParentFont = False
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      TabOrder = 2
+      ClientEvents.ExtEvents.Strings = (
+        
+          'afterrender=function afterrender(sender, eOpts)'#13#10'{'#13#10'  var el = s' +
+          'ender.inputEl.dom;'#13#10'  Inputmask({alias: "email"}).mask(el);'#13#10'}')
+      ClearButton = True
+    end
+    object lblSifre: TUniLabel
+      Left = 242
+      Top = 167
+      Width = 31
+      Height = 19
+      Hint = ''
+      Caption = #350'ifre'
+      ParentFont = False
+      Font.Color = clWhite
+      Font.Height = -16
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentColor = False
+      Color = clWhite
+      TabOrder = 3
+    end
+    object btnGiris: TUniButton
+      Left = 242
+      Top = 212
+      Width = 87
+      Height = 39
+      Hint = ''
+      Caption = ' Giri'#351
+      ModalResult = 1
+      ParentFont = False
+      Font.Color = clWhite
+      Font.Height = -14
+      Font.Name = 'Calibri'
+      TabOrder = 4
+      ClientEvents.UniEvents.Strings = (
+        
+          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'  config.cls=' +
+          #39'bntLogin'#39';'#13#10'}')
+      ScreenMask.Enabled = True
+      ScreenMask.WaitData = True
+      ScreenMask.Message = 'L'#252'tfen Bekleyiniz...'
+      ScreenMask.Target = Owner
+      OnClick = btnGirisClick
+    end
+    object logo: TUniImage
+      Left = 16
+      Top = 12
+      Width = 185
+      Height = 243
+      Hint = ''
+      Url = 'files/img/storyteller.png'
+      Transparent = True
+    end
+    object txtSifre: TUniEdit
+      Left = 311
+      Top = 165
+      Width = 233
+      Height = 23
+      Hint = ''
+      PasswordChar = '*'
+      MaxLength = 120
+      Text = ''
+      ParentFont = False
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      TabOrder = 6
+      ClearButton = True
+    end
+    object UniImage1: TUniImage
+      Left = 242
+      Top = 29
+      Width = 302
+      Height = 81
+      Hint = ''
+      Url = 'files/img/Logo.png'
+      Transparent = True
+    end
+    object btnVazgec: TUniButton
+      Left = 456
+      Top = 212
+      Width = 88
+      Height = 39
+      Hint = ''
+      Caption = 'Vazge'#231
+      ModalResult = 2
+      ParentFont = False
+      Font.Color = clWhite
+      Font.Height = -14
+      Font.Name = 'Calibri'
+      TabOrder = 8
+      ClientEvents.UniEvents.Strings = (
+        
+          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'  config.cls=' +
+          #39'bntLogin'#39';'#13#10'}')
+      ScreenMask.Enabled = True
+      ScreenMask.WaitData = True
+      ScreenMask.Message = 'L'#252'tfen Bekleyiniz...'
+      ScreenMask.Target = Owner
+    end
+    object btnUnuttum: TUniButton
+      Left = 335
+      Top = 212
+      Width = 115
+      Height = 39
+      Hint = ''
+      Caption = #350'ifremi Unuttum'
+      ModalResult = 2
+      ParentFont = False
+      Font.Color = clWhite
+      Font.Height = -14
+      Font.Name = 'Calibri'
+      TabOrder = 9
+      ClientEvents.UniEvents.Strings = (
+        
+          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'  config.cls=' +
+          #39'bntLogin'#39';'#13#10'}')
+      ScreenMask.Enabled = True
+      ScreenMask.WaitData = True
+      ScreenMask.Message = 'L'#252'tfen Bekleyiniz...'
+      ScreenMask.Target = Owner
+      OnClick = btnUnuttumClick
+    end
+  end
+  object mesaj: TUniSweetAlert
+    Title = 'Hesap Bilirim'
+    ConfirmButtonText = 'Tamam'
+    CancelButtonText = #304'ptal'
+    Padding = 20
+    Left = 82
+    Top = 120
+  end
+  object qLogin: TUniQuery
+    Connection = UniServerModule.ServisDB
+    Left = 84
+    Top = 40
+  end
+end

@@ -1,0 +1,331 @@
+unit Kullanici;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, UniPageControl,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses, Kullanicilar,
+  uniGUIClasses, uniGUIFrame, uniGUIBaseClasses, uniSweetAlert, Data.DB, MemDS,
+  DBAccess, Uni, uniCheckBox, uniDBCheckBox, uniMemo, uniDBMemo, uniMultiItem,
+  uniComboBox, uniDBComboBox, uniDBLookupComboBox, uniEdit, uniDBEdit,
+  uniScrollBox, uniButton, uniBitBtn, uniPanel, uniRadioGroup, uniDBRadioGroup,
+  uniDateTimePicker, uniDBDateTimePicker, StrUtils;
+
+type
+  TKullaniciForm = class(TUniFrame)
+    UniToolBar1: TUniPanel;
+    btnKaydet: TUniBitBtn;
+    UniPanel1: TUniPanel;
+    btnYeni: TUniBitBtn;
+    btnKapat: TUniBitBtn;
+    btnVazgec: TUniBitBtn;
+    btnSil: TUniBitBtn;
+    btnYardim: TUniBitBtn;
+    UniScrollBox1: TUniScrollBox;
+    txtAdi: TUniDBEdit;
+    txtSoyadi: TUniDBEdit;
+    txtFirma: TUniDBLookupComboBox;
+    txtTelefon: TUniDBEdit;
+    txtAciklama: TUniDBMemo;
+    txtDurum: TUniDBCheckBox;
+    txtEMail: TUniDBEdit;
+    qKullanici: TUniQuery;
+    dsKullanici: TDataSource;
+    sil: TUniSweetAlert;
+    iptal: TUniSweetAlert;
+    qFirmalar: TUniQuery;
+    dsFirmalar: TDataSource;
+    txtBaslangic: TUniDBDateTimePicker;
+    txtBitis: TUniDBDateTimePicker;
+    txtUyelikBedeli: TUniDBCheckBox;
+    txtUyelikTuru: TUniDBComboBox;
+    txtRol: TUniDBComboBox;
+    txtDYSRolu: TUniDBComboBox;
+    procedure silConfirm(Sender: TObject);
+    procedure txtFirmaEnter(Sender: TObject);
+    procedure txtFirmaTriggerEvent(Sender: TUniCustomComboBox;
+      AButtonId: Integer);
+    procedure UniFrameAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
+    procedure UniFrameCreate(Sender: TObject);
+    procedure btnKapatClick(Sender: TObject);
+    procedure btnKaydetClick(Sender: TObject);
+    procedure btnSilClick(Sender: TObject);
+    procedure btnVazgecClick(Sender: TObject);
+    procedure btnYeniClick(Sender: TObject);
+    procedure dsKullaniciStateChange(Sender: TObject);
+    procedure iptalConfirm(Sender: TObject);
+    procedure txtFirmaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+  private
+    { Private declarations }
+    KUL_ID: integer;
+    procedure DugmeleriAyarla;
+    function GenerateGuid: string;
+  public
+    { Public declarations }
+    PKullanicilarForm: TKullanicilarForm;
+  end;
+
+implementation
+
+{$R *.dfm}
+
+uses ServerModule, MainModule, Utils, Firmalar;
+
+
+procedure TKullaniciForm.btnKapatClick(Sender: TObject);
+begin
+  try
+    if qKullanici.State in dsEditModes then
+      iptal.Show
+    else
+    begin
+      if PKullanicilarForm<>nil then
+      begin
+        UniMainModule.DataSetRefresh(PKullanicilarForm.qKullanicilar, 'KUL_ID', qKullanici.FieldByName('KUL_ID').AsInteger);
+        UniMainModule.Focus(PKullanicilarForm.txtAdiSoyadi);
+      end;
+      UniMainModule.FrameKapat(Self);
+    end;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+function TKullaniciForm.GenerateGuid: string;
+var
+  s: string;
+begin
+  s := StringReplace(TGUID.NewGuid.ToString, '{', '', [rfReplaceAll]);
+  s := StringReplace(s, '}', '', [rfReplaceAll]);
+  s := StringReplace(s, '-', '', [rfReplaceAll]);
+  Result := s;
+end;
+
+procedure TKullaniciForm.btnKaydetClick(Sender: TObject);
+begin
+  try
+    if qKullanici.State in dsEditModes then
+    begin
+      if Trim(qKullanici.FieldByName('KUL_ADI').AsString)='' then
+      begin
+        UniMainModule.Notification('', 'Müþteri adýný giriniz', 1);
+        UniMainModule.Focus(txtAdi);
+        exit;
+      end;
+      if Trim(qKullanici.FieldByName('KUL_SOYADI').AsString)='' then
+      begin
+        UniMainModule.Notification('', 'Müþteri soyadýný giriniz', 1);
+        UniMainModule.Focus(txtSoyadi);
+        exit;
+      end;
+      if qKullanici.FieldByName('KUL_GUID').IsNull then
+        qKullanici.FieldByName('KUL_GUID').AsString := LowerCase(GenerateGuid);
+      qKullanici.Post;
+      qKullanici.ParamByName('KUL_ID').AsInteger := qKullanici.FieldByName('KUL_ID').AsInteger;
+      UniMainModule.Notification('', 'Ýþlem Tamamlandý', 3);
+      UniMainModule.Focus(txtAdi);
+    end;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKullaniciForm.btnSilClick(Sender: TObject);
+begin
+  try
+    sil.Show;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKullaniciForm.btnVazgecClick(Sender: TObject);
+begin
+  try
+    if qKullanici.State in dsEditModes then
+    begin
+      qKullanici.Cancel;
+      if not qKullanici.FieldByName('KUL_ID').IsNull then
+      begin
+        qKullanici.ParamByName('KUL_ID').AsInteger := qKullanici.FieldByName('KUL_ID').AsInteger;
+        UniMainModule.Focus(txtAdi);
+      end
+      else
+      begin
+        if PKullanicilarForm<>nil then
+        begin
+          UniMainModule.DataSetRefresh(PKullanicilarForm.qKullanicilar, 'KUL_ID', qKullanici.FieldByName('KUL_ID').AsInteger);
+          UniMainModule.Focus(PKullanicilarForm.txtAdiSoyadi);
+        end;
+        UniMainModule.FrameKapat(Self);
+      end;
+    end;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKullaniciForm.btnYeniClick(Sender: TObject);
+begin
+  try
+    if qKullanici.State=dsBrowse then
+    begin
+      qKullanici.Append;
+      UniMainModule.Focus(txtAdi);
+    end;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKullaniciForm.dsKullaniciStateChange(Sender: TObject);
+begin
+  DugmeleriAyarla;
+end;
+
+procedure TKullaniciForm.DugmeleriAyarla;
+begin
+  try
+    btnKaydet.Visible     := qKullanici.State in dsEditModes;
+    btnVazgec.Visible     := btnKaydet.Visible;
+    btnYeni.Visible       := not btnKaydet.Visible;
+    btnSil.Visible        := not btnKaydet.Visible;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKullaniciForm.iptalConfirm(Sender: TObject);
+begin
+  try
+    qKullanici.Cancel;
+    if PKullanicilarForm<>nil then
+    begin
+      UniMainModule.DataSetRefresh(PKullanicilarForm.qKullanicilar, 'KUL_ID', qKullanici.FieldByName('KUL_ID').AsInteger);
+      UniMainModule.Focus(PKullanicilarForm.txtAdiSoyadi)
+    end;
+    UniMainModule.FrameKapat(Self)
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKullaniciForm.silConfirm(Sender: TObject);
+begin
+  try
+    qKullanici.Delete;
+    if PKullanicilarForm<>nil then
+    begin
+      UniMainModule.DataSetRefresh(PKullanicilarForm.qKullanicilar, 'KUL_ID', qKullanici.FieldByName('KUL_ID').AsInteger);
+      PKullanicilarForm.txtAdiSoyadi.SetFocus;
+    end;
+    UniMainModule.Notification('', 'Kayýt Silindi', 3);
+    UniMainModule.FrameKapat(Self);
+  except on e:exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKullaniciForm.txtFirmaEnter(Sender: TObject);
+begin
+  qFirmalar.DisableControls;
+  try
+    qFirmalar.Close;
+    qFirmalar.Open;
+    UniSession.Synchronize;
+  finally
+    qFirmalar.EnableControls;
+  end;
+end;
+
+procedure TKullaniciForm.txtFirmaKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_F4 then
+    txtFirmaTriggerEvent(txtFirma, 1);
+end;
+
+procedure TKullaniciForm.txtFirmaTriggerEvent(Sender: TUniCustomComboBox;
+  AButtonId: Integer);
+var
+  I: Integer;
+  T: TUniTabSheet;
+  F: TFirmalarForm;
+begin
+  if AButtonId=1 then
+  begin
+    try
+      if isFrameOpenedInTab('TUFirmalarForm', TUniTabSheet(Self.Parent)) then exit;
+      T := TUniTabSheet(Self.Parent);
+      T.Caption := T.Caption + ' > Firmalar';
+
+      for I := 0 to T.ControlCount-1 do
+        T.Controls[I].Visible := False;
+
+      UniMainModule.Tmp_Form_Sec := 1;
+      F := TFirmalarForm.Create(T);
+      F.UniPanel2.Caption :=  'Firmalar';
+      F.PKullaniciForm := Self;
+      F.Align := alClient;
+      F.Parent := T;
+      F.Show;
+    except on E: Exception do
+      UniMainModule.Notification('', HataMesaj(e.Message), 2);
+    end;
+  end;
+end;
+
+procedure TKullaniciForm.UniFrameAjaxEvent(Sender: TComponent;
+  EventName: string; Params: TUniStrings);
+begin
+  if EventName = 'esc_pressed' then btnKapatClick(Sender);
+end;
+
+procedure TKullaniciForm.UniFrameCreate(Sender: TObject);
+begin
+  self.ClientEvents.ExtEvents.Values['afterrender'] := 'function afterrender(sender, eOpts)' +
+         '{' +
+         '   sender.el.on("keydown", function(e){' +
+         '   if (e.getKey() == Ext.EventObject.ESC) {' +
+         '      ajaxRequest(sender, "esc_pressed", []);' +
+         '   }' +
+         '   });' +
+         '}';
+
+//  txtFirma.ClientEvents.ExtEvents.Values['beforequery'] := 'function beforequery(sender, queryPlan, eOpts) {' +
+//    '  if (!sender.__reloading) {' +
+//    '    sender.__reloading = true;' +
+//    '    ajaxRequest(sender, "reloadStore", []);' +
+//    '    return false;' +
+//    '  }' +
+//    '}';
+
+  UniMainModule.ButtonMask([btnKaydet, btnVazgec, btnYeni, btnSil, btnKapat]);
+  UniMainModule.SetFocusBlur(TUniFrame(Self));
+
+  KUL_ID := UniMainModule.Tmp_ID;
+  UniMainModule.Tmp_ID := -1;
+
+  try
+    if qFirmalar.Active then
+      qFirmalar.Close;
+    if qKullanici.Active then
+      qKullanici.Close;
+
+    qFirmalar.Open;
+
+    qKullanici.ParamByName('KUL_ID').AsInteger := KUL_ID;
+    qKullanici.Open;
+
+    if KUL_ID=0 then
+      qKullanici.Append;
+
+    UniMainModule.Focus(txtAdi);
+  except on e: exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+end.
