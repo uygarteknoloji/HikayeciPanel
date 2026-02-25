@@ -1,0 +1,88 @@
+<model-viewer src="3DTanitim.glb" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="neutral" poster="poster.webp" shadow-intensity="1" environment-image="aircraft_workshop_01_1k.hdr" camera-orbit="-68.44deg 71.54deg 18.25m" field-of-view="13.48deg" auto-rotate min-camera-orbit="auto 0deg auto" max-camera-orbit="auto 80deg auto">
+    <div class="progress-bar hide" slot="progress-bar">
+        <div class="update-bar"></div>
+    </div>
+    <button slot="ar-button" id="ar-button">
+        View in your space
+    </button>
+    <div id="ar-prompt">
+        <img src="https://modelviewer.dev/shared-assets/icons/hand.png">
+    </div>
+</model-viewer>
+
+
+const modelViewer = document.getElementById('tanitimModel') as any;
+  let arButton: HTMLElement | null;
+  arButton = document.getElementById('ar-button');
+  console.log(arButton)
+  if(arButton){
+    console.log(arButton)
+    arButton.addEventListener('click', (event) => {
+      if (modelViewer && !modelViewer.canActivateAR) {
+        event.preventDefault(); // AR başlatmayı engelle
+        // burada istersen alert yerine hiçbir şey de yapmayabilirsin
+      }
+    });
+  }
+
+
+6LeNitsrAAAAAAMajk77UY_oObC0b9R79HhWIgJc site anahtarı
+6LeNitsrAAAAAG1MVJWufRPdH1zzeuCFzfaa1GQB gizli anahtar
+
+5Jmvm7uvuLXzGnm
+
+F8z36CZizuaf2qh
+
+xsmtpsib-23bf6a047ae7148a9a5a608a1b800ba55f5f7afc1a19bafdcc9038f5eac25f84-6CArzK5qdDO9mQw1 brevo SMTP api key
+
+ry@yazganlar.com
+R139!713y
+
+
+
+B9bLMB]~2EOh - bilgi@uygarteknoloji.com.tr
+B)D1.]OQj]B7 - info@uygarteknoloji.com.tr
+.nm?2N_Ty8f~ - muygar@uygarteknoloji.com.tr
+
+Taslak
+Onay Bekleyen
+Yayınlandı
+Arşivlendi
+
+Genel
+Kurum İçi
+Gizli
+Çok Gizli
+
+Gözlemci
+Yazar
+Onay Yetkilisi
+DYS Yöneticisi
+
+//  txtKulAdi.Text := 'bilgisayarmuhendisi@hotmail.com';
+//  txtSifre.Text := 'M139!713u';
+  txtKulAdi.Text := 'kysyoneticisi@kyspro.tr';  // Sistem Yöneticisi, DYS Yöneticisi
+  txtSifre.Text := 'A123!456z';
+//  txtKulAdi.Text := 'kys@kyspro.tr';            // Gözlemci
+//  txtSifre.Text := 'A123!456z';
+//  txtKulAdi.Text := 'dysyoneticisi@kyspro.tr';  // DYS Yöneticisi
+//  txtSifre.Text := 'A123!456z';
+//  txtKulAdi.Text := 'dysoy@kyspro.tr';          // Onay Yetkilisi
+//  txtSifre.Text := 'A123!456z';
+//  txtKulAdi.Text := 'dysyazar@kyspro.tr';       // Yazar
+//  txtSifre.Text := 'A123!456z';
+//  txtKulAdi.Text := 'dysgozlemci@kyspro.tr';    // Gözlemci
+//  txtSifre.Text := 'A123!456z';
+//  txtKulAdi.Text := 'mcinar@testfirmasi.com';   // Sistem Yöneticisi, DYS Yöneticisi
+//  txtSifre.Text := 'A123!456z';
+//  txtKulAdi.Text := 'emaden@testfirmasi.com';   // DYS Yöneticisi
+//  txtSifre.Text := 'A123!456z';
+//  txtKulAdi.Text := 'msimsek@testfirmasi.com';  // Onay Yetkilisi
+//  txtSifre.Text := 'A123!456z';
+//  txtKulAdi.Text := 'esevgi@testfirmasi.com';   // Yazar
+//  txtSifre.Text := 'A123!456z';
+//  txtKulAdi.Text := 'apinar@testfirmasi.com';   // Gözlemci
+
+
+
+http://localhost:8077/files/pdfjs/web/secureviewer.html?file=/files/docs/1/Blender.pdf&watermark=/files/docs/1/fligran.png

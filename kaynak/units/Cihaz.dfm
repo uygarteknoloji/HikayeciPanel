@@ -229,6 +229,7 @@ object CihazForm: TCihazForm
       ClearButton = True
       FieldLabel = 'MAC Adresi'
       FieldLabelSeparator = ' '
+      FieldLabelFont.Color = clRed
     end
     object txtAciklama: TUniDBMemo
       Left = 22

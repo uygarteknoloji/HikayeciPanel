@@ -223,9 +223,22 @@ end;
 procedure TDosyalarForm.silConfirm(Sender: TObject);
 begin
   try
-    qDosyalar.Delete;
-    UniMainModule.Notification('', 'Kayýt Silindi', 3);
-    UniMainModule.Focus(txtCihaz);
+    if FileExists('files\docs\kategori\' + qDosyalar.FieldByName('KAT_KLASOR').AsString + '\' + qDosyalar.FieldByName('DOS_DOSYA_ADI').AsString) then
+    begin
+      if DeleteFile('files\docs\kategori\' + qDosyalar.FieldByName('KAT_KLASOR').AsString + '\' + qDosyalar.FieldByName('DOS_DOSYA_ADI').AsString) then
+      begin
+        qDosyalar.Delete;
+        UniMainModule.Notification('', 'Dosya ve Kayýt Silindi', 3);
+      end
+      else
+        UniMainModule.Notification('', 'Dosya ve Kayýt Silinemedi', 2);
+    end
+    else
+    begin
+      qDosyalar.Delete;
+      UniMainModule.Notification('', 'Dosya bulunamadý, kayýt silindi', 2);
+    end;
+    UniMainModule.Focus(txtKategori);
   except on e:exception do
     UniMainModule.Notification('', HataMesaj(e.Message), 2);
   end;

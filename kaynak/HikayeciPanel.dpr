@@ -25,7 +25,9 @@ uses
   UFirma in 'units\UFirma.pas' {UFirmaForm: TUniFrame},
   UFirmalar in 'units\UFirmalar.pas' {UFirmalarForm: TUniFrame},
   Dosya in 'units\Dosya.pas' {DosyaForm: TUniFrame},
-  Dosyalar in 'units\Dosyalar.pas' {DosyalarForm: TUniFrame};
+  Dosyalar in 'units\Dosyalar.pas' {DosyalarForm: TUniFrame},
+  Reklam in 'units\Reklam.pas' {ReklamForm: TUniFrame},
+  Reklamlar in 'units\Reklamlar.pas' {ReklamlarForm: TUniFrame};
 
 {$R *.res}
 

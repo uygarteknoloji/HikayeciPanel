@@ -134,8 +134,6 @@ object KategoriForm: TKategoriForm
       Images = UniMainModule.ikonListe
       ImageIndex = 2
       OnClick = btnSilClick
-      ExplicitLeft = 172
-      ExplicitTop = 4
     end
     object btnYardim: TUniBitBtn
       Left = 513
@@ -231,6 +229,7 @@ object KategoriForm: TKategoriForm
       ClearButton = True
       FieldLabel = 'Klas'#246'r'
       FieldLabelSeparator = ' '
+      FieldLabelFont.Color = clRed
     end
     object txtAciklama: TUniDBMemo
       Left = 22

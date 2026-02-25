@@ -415,7 +415,7 @@ object DosyalarForm: TDosyalarForm
   object qDosyalar: TUniQuery
     Connection = UniServerModule.Data
     SQL.Strings = (
-      'Select DOSYALAR.*, CIH_ADI, KAT_ADI'
+      'Select DOSYALAR.*, CIH_ADI, KAT_ADI, KAT_KLASOR'
       'From DOSYALAR'
       'Left Join KATEGORILER On DOS_KAT_ID=KAT_ID'
       'Left Join CIHAZLAR On DOS_CIH_ID=CIH_ID')

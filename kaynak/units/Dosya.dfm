@@ -290,7 +290,7 @@ object DosyaForm: TDosyaForm
           ButtonId = 1
           IconCls = 'x-form-search-trigger'
           HandleClicks = True
-          Hint = 'F4 - Firmalar'
+          Hint = 'F4 - Cihazlar'
         end>
       Style = csDropDown
       OnTriggerEvent = txtCihazTriggerEvent
@@ -331,7 +331,7 @@ object DosyaForm: TDosyaForm
           ButtonId = 1
           IconCls = 'x-form-search-trigger'
           HandleClicks = True
-          Hint = 'F4 - Firmalar'
+          Hint = 'F4 - Kategoriler'
         end>
       Style = csDropDown
       OnTriggerEvent = txtKategoriTriggerEvent

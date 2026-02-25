@@ -420,6 +420,7 @@ object MainForm: TMainForm
           Hint = ''
           Stretch = True
           Url = 'files/img/reklamyonetimi.png'
+          OnClick = btnReklamClick
         end
       end
       object UniPanel3: TUniPanel

@@ -93,6 +93,12 @@ begin
   try
     if qCihaz.State in dsEditModes then
     begin
+      if Trim(qCihaz.FieldByName('CIH_ADI').AsString)='' then
+      begin
+        UniMainModule.Notification('', 'Cihaz adýný giriniz', 1);
+        UniMainModule.Focus(txtCihazAdi);
+        exit;
+      end;
       if Trim(qCihaz.FieldByName('CIH_MAC').AsString)='' then
       begin
         UniMainModule.Notification('', 'MAC adresini giriniz', 1);

@@ -1,46 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.028,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firma.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.199,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.688,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Metin.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.980,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Metin.pas=</Transaction>
     <Transaction>1899.12.30 00:00:00.000.182,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firmalar.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.245,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firmalar.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.296,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firmalar.pas=</Transaction>
     <Transaction>1899.12.30 00:00:00.000.777,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.227,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.316,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.021,=C:\Projeler\Fanus\HikayeciPanel\kaynak\Main.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.499,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Dosya.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.577,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.227,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.149,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firmalar.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.807,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.196,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\UFirma.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.052,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kullanicilar.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.981,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kullanici.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.531,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\YeniSifre.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.245,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firmalar.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.296,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firmalar.pas=</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.227,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.028,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firma.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.553,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Dosyalar.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.199,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.734,=C:\Projeler\Fanus\HikayeciPanel\kaynak\ServerModule.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.149,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firmalar.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.149,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firmalar.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.113,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\KayitBilgi.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.028,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firma.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.165,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firma.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.836,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firma.pas=</Transaction>
     <Transaction>1899.12.30 00:00:00.000.113,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firma.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.386,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.577,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.807,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.743,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\YeniSifreOlustur.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.308,=C:\Projeler\Fanus\HikayeciPanel\kaynak\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.807,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.162,=C:\Projeler\Fanus\HikayeciPanel\kaynak\ServiceModule.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.062,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Login.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.577,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.577,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.739,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Metinler.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.355,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Metinler.pas=</Transaction>
     <Transaction>1899.12.30 00:00:00.000.786,=C:\Projeler\Fanus\HikayeciPanel\kaynak\MainModule.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.149,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firmalar.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.807,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategoriler.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihazlar.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.028,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Firma.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.199,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.199,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.pas=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.265,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\UFirmalar.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.227,C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Kategori.dfm=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Cihaz.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.162,=C:\Projeler\Fanus\HikayeciPanel\kaynak\ServiceModule.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.062,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Login.pas</Transaction>
+    <Transaction>2026.02.25 14:57:53.639,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Reklam.pas</Transaction>
+    <Transaction>2026.02.25 14:57:53.695,=C:\Projeler\Fanus\HikayeciPanel\kaynak\units\Reklamlar.pas</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="1">
     <File Path="units"/>
@@ -64,6 +66,10 @@
     <File Path="units\Kullanicilar.dfm"/>
     <File Path="units\Login.pas"/>
     <File Path="units\Login.dfm"/>
+    <File Path="units\Reklam.pas"/>
+    <File Path="units\Reklam.dfm"/>
+    <File Path="units\Reklamlar.pas"/>
+    <File Path="units\Reklamlar.dfm"/>
     <File Path="units\UFirma.pas"/>
     <File Path="units\UFirma.dfm"/>
     <File Path="units\UFirmalar.pas"/>
