@@ -434,14 +434,15 @@ object MainForm: TMainForm
         TitleVisible = True
         Title = 'Metinler'
         Caption = ''
-        object btnMetinler: TUniImage
+        object btnDosyalar: TUniImage
           Left = 4
           Top = 4
           Width = 200
           Height = 96
           Hint = ''
           Stretch = True
-          Url = 'files/img/metinler.png'
+          Url = 'files/img/dosyalar.png'
+          OnClick = btnDosyalarClick
         end
       end
       object UniPanel6: TUniPanel

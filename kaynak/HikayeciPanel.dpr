@@ -23,7 +23,9 @@ uses
   Cihaz in 'units\Cihaz.pas' {CihazForm: TUniFrame},
   Cihazlar in 'units\Cihazlar.pas' {CihazlarForm: TUniFrame},
   UFirma in 'units\UFirma.pas' {UFirmaForm: TUniFrame},
-  UFirmalar in 'units\UFirmalar.pas' {UFirmalarForm: TUniFrame};
+  UFirmalar in 'units\UFirmalar.pas' {UFirmalarForm: TUniFrame},
+  Dosya in 'units\Dosya.pas' {DosyaForm: TUniFrame},
+  Dosyalar in 'units\Dosyalar.pas' {DosyalarForm: TUniFrame};
 
 {$R *.res}
 

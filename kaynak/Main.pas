@@ -29,7 +29,7 @@ type
     UniPanel5: TUniPanel;
     btnReklam: TUniImage;
     UniPanel3: TUniPanel;
-    btnMetinler: TUniImage;
+    btnDosyalar: TUniImage;
     UniPanel6: TUniPanel;
     btnCihazlar: TUniImage;
     UniStatusBar1: TUniStatusBar;
@@ -46,6 +46,7 @@ type
     procedure btnKategorilerClick(Sender: TObject);
     procedure UniFormCreate(Sender: TObject);
     procedure btnCihazlarClick(Sender: TObject);
+    procedure btnDosyalarClick(Sender: TObject);
   private
     { Private declarations }
     btnNumber: integer;
@@ -66,7 +67,8 @@ implementation
 
 uses
   uniGUIVars, MainModule, ServerModule, uniGUIApplication, uniStrUtils,
-  Login, Kullanicilar, Utils, YeniSifreOlustur, Kategoriler, Cihazlar;
+  Login, Kullanicilar, Utils, YeniSifreOlustur, Kategoriler, Cihazlar,
+  Dosyalar;
 
 function MainForm: TMainForm;
 begin
@@ -130,6 +132,34 @@ begin
     end;
   end;
 end;
+
+procedure TMainForm.btnDosyalarClick(Sender: TObject);
+var
+  T: TUniTabSheet;
+  DosyalarForm: TDosyalarForm;
+begin
+  if not UniMainModule.isLogin then
+  begin
+    UniMainModule.Notification('', 'Kullanýcý giriþi yapmalýsýnýz', 2);
+    Exit;
+  end;
+  try
+    TabNo := TabNo + 1;
+    T := TUniTabSheet.Create(Self);
+    T.Name := 'TS' + IntToStr(tabno);
+    T.PageControl := UniPageControl1;
+    T.Closable := True;
+    T.Caption := 'Dosyalar';
+    UniPageControl1.ActivePage := T;
+    DosyalarForm := TDosyalarForm.Create(T);
+    DosyalarForm.Align := alClient;
+    DosyalarForm.Parent := T;
+    DosyalarForm.Show;
+  except on e: exception do
+    begin
+     UniMainModule.Notification('', HataMesaj(e.Message), 2);
+    end;
+  end;end;
 
 procedure TMainForm.btnGirisClick(Sender: TObject);
 var
@@ -293,16 +323,16 @@ begin
     '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/kategoriler.png");' +
     '  });' +
     '}';
-  btnMetinler.ClientEvents.ExtEvents.Values['afterrender'] :=
+  btnDosyalar.ClientEvents.ExtEvents.Values['afterrender'] :=
     'function(sender, eOpts) {' +
     '  sender.getEl().on("mousedown", function() {' +
-    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/metinlerhover.png");' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/dosyalarhover.png");' +
     '  });' +
     '  sender.getEl().on("mouseup", function() {' +
-    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/metinler.png");' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/dosyalar.png");' +
     '  });' +
     '  sender.getEl().on("mouseout", function() {' +
-    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/metinler.png");' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/dosyalar.png");' +
     '  });' +
     '}';
   btnReklam.ClientEvents.ExtEvents.Values['afterrender'] :=

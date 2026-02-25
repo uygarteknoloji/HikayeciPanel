@@ -1,0 +1,428 @@
+object DosyalarForm: TDosyalarForm
+  Left = 0
+  Top = 0
+  Width = 1012
+  Height = 653
+  OnCreate = UniFrameCreate
+  OnAjaxEvent = UniFrameAjaxEvent
+  TabOrder = 0
+  object UniPanel1: TUniPanel
+    Left = 0
+    Top = 0
+    Width = 1012
+    Height = 653
+    Hint = ''
+    Margins.Left = 5
+    Margins.Top = 5
+    Margins.Right = 5
+    Margins.Bottom = 5
+    Align = alClient
+    TabOrder = 0
+    Caption = ''
+    object UniToolBar1: TUniPanel
+      Left = 1
+      Top = 1
+      Width = 1010
+      Height = 60
+      Hint = ''
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      Align = alTop
+      ParentFont = False
+      Font.Height = -28
+      TabOrder = 1
+      BorderStyle = ubsFrameLowered
+      Caption = ''
+      object btnYeni: TUniBitBtn
+        Left = 2
+        Top = 2
+        Width = 56
+        Height = 56
+        Hint = 'Yeni'
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        ShowHint = True
+        ParentShowHint = False
+        Caption = ''
+        Align = alLeft
+        TabOrder = 1
+        Images = UniMainModule.ikonListe
+        ImageIndex = 0
+        OnClick = btnYeniClick
+      end
+      object btnDegistir: TUniBitBtn
+        Left = 58
+        Top = 2
+        Width = 56
+        Height = 56
+        Hint = 'De'#287'i'#351'tir'
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        ShowHint = True
+        ParentShowHint = False
+        Caption = ''
+        Align = alLeft
+        TabOrder = 2
+        Images = UniMainModule.ikonListe
+        ImageIndex = 1
+        OnClick = btnDegistirClick
+      end
+      object btnSil: TUniBitBtn
+        Left = 114
+        Top = 2
+        Width = 56
+        Height = 56
+        Hint = 'Sil'
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        ShowHint = True
+        ParentShowHint = False
+        Caption = ''
+        Align = alLeft
+        TabOrder = 3
+        Images = UniMainModule.ikonListe
+        ImageIndex = 2
+        OnClick = btnSilClick
+      end
+      object btnKapat: TUniBitBtn
+        Left = 952
+        Top = 2
+        Width = 56
+        Height = 56
+        Hint = 'Kapat'
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        ShowHint = True
+        ParentShowHint = False
+        Caption = ''
+        Align = alRight
+        TabOrder = 6
+        Images = UniMainModule.ikonListe
+        ImageIndex = 9
+        OnClick = btnKapatClick
+      end
+      object UniPanel2: TUniPanel
+        Left = 170
+        Top = 2
+        Width = 726
+        Height = 56
+        Hint = ''
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Align = alClient
+        ParentFont = False
+        Font.Height = -24
+        Font.Name = 'Calibri'
+        TabOrder = 4
+        TabStop = False
+        BorderStyle = ubsNone
+        Caption = 'Dosyalar'
+        Color = 15724527
+      end
+      object btnSec: TUniBitBtn
+        Left = 896
+        Top = 2
+        Width = 56
+        Height = 56
+        Hint = 'Se'#231
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Visible = False
+        ShowHint = True
+        ParentShowHint = False
+        Caption = ''
+        Align = alRight
+        TabOrder = 5
+        Images = UniMainModule.ikonListe
+        ImageIndex = 8
+        OnClick = btnSecClick
+      end
+    end
+    object pnlBul: TUniPanel
+      Left = 1
+      Top = 121
+      Width = 1010
+      Height = 44
+      Hint = ''
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      Visible = False
+      Align = alTop
+      ParentFont = False
+      Font.Color = clRed
+      Font.Style = [fsBold]
+      TabOrder = 2
+      BorderStyle = ubsFrameLowered
+      Caption = ''
+      Color = 15724527
+    end
+    object UniPanel3: TUniPanel
+      Left = 1
+      Top = 61
+      Width = 1010
+      Height = 60
+      Hint = ''
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      Align = alTop
+      TabOrder = 3
+      ClientEvents.UniEvents.Strings = (
+        
+          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'  config.base' +
+          'Cls='#39'customPanelBorder'#39';'#13#10'  config.cls='#39'customPanelBorder'#39';'#13#10'}')
+      BorderStyle = ubsFrameLowered
+      Caption = ''
+      Color = 15724527
+      object btnBul: TUniBitBtn
+        Left = 2
+        Top = 2
+        Width = 56
+        Height = 56
+        Hint = 'Bul'
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        ShowHint = True
+        ParentShowHint = False
+        Caption = ''
+        Align = alLeft
+        TabOrder = 1
+        Images = UniMainModule.ikonListe
+        ImageIndex = 5
+        OnClick = btnBulClick
+      end
+      object txtCihaz: TUniEdit
+        Left = 201
+        Top = 16
+        Width = 150
+        Height = 24
+        Hint = ''
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Text = ''
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 3
+        EmptyText = 'Cihaz'
+        ClearButton = True
+      end
+      object txtDurum: TUniComboBox
+        Left = 78
+        Top = 16
+        Width = 120
+        Height = 24
+        Hint = ''
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Text = ''
+        Items.Strings = (
+          'Kullan'#305'mda'
+          'Kullan'#305'm D'#305#351#305)
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 2
+        ClientEvents.UniEvents.Strings = (
+          
+            'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'  config.type' +
+            'Ahead = true;'#13#10'}'#13#10)
+        EmptyText = 'Durum'
+        ClearButton = True
+        IconItems = <>
+      end
+      object txtKayitSayisi: TUniComboBox
+        Left = 659
+        Top = 16
+        Width = 57
+        Height = 24
+        Hint = ''
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Text = 'txtKayitSayisi'
+        Items.Strings = (
+          '25'
+          '50'
+          '100'
+          '500'
+          '1000')
+        ItemIndex = 0
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 4
+        IconItems = <>
+      end
+      object txtKategori: TUniEdit
+        Left = 353
+        Top = 16
+        Width = 150
+        Height = 24
+        Hint = ''
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Text = ''
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 5
+        EmptyText = 'Kategori'
+        ClearButton = True
+      end
+      object txtEserAdi: TUniEdit
+        Left = 506
+        Top = 16
+        Width = 150
+        Height = 24
+        Hint = ''
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Text = ''
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 6
+        EmptyText = 'Eser Ad'#305
+        ClearButton = True
+      end
+    end
+    object Grid: TUniDBGrid
+      Left = 1
+      Top = 165
+      Width = 1010
+      Height = 487
+      Hint = ''
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      TitleFont.Style = [fsBold]
+      DataSource = dsDosyalar
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgConfirmDelete, dgAutoRefreshRow]
+      LoadMask.Enabled = False
+      LoadMask.Message = 'Y'#252'kleniyor...'
+      EmptyText = '< Veri Bulunamad'#305' >'
+      Align = alClient
+      TabOrder = 4
+      Exporter.Enabled = True
+      Exporter.IncludeGroups = True
+      Exporter.IncludeSummary = True
+      Exporter.FileName = 'Firmalar'
+      Exporter.Title = 'Firmalar'
+      OnAjaxEvent = GridAjaxEvent
+      OnColumnSort = GridColumnSort
+      OnDblClick = GridDblClick
+      OnDrawColumnCell = GridDrawColumnCell
+      Columns = <
+        item
+          FieldName = 'DOS_ID'
+          Title.Caption = 'Dosya No'
+          Width = 100
+          Sortable = True
+        end
+        item
+          FieldName = 'DOS_DURUM'
+          Title.Caption = 'Durum'
+          Width = 125
+          Alignment = taLeftJustify
+          Sortable = True
+          CheckBoxField.BooleanFieldOnly = False
+          CheckBoxField.FieldValues = '1;0'
+          CheckBoxField.DisplayValues = 'Kullan'#305'mda;Kullan'#305'm D'#305#351#305
+        end
+        item
+          FieldName = 'CIH_ADI'
+          Title.Caption = 'Cihaz Ad'#305
+          Width = 200
+          ReadOnly = True
+        end
+        item
+          FieldName = 'KAT_ADI'
+          Title.Caption = 'Kategori'
+          Width = 200
+          ReadOnly = True
+        end
+        item
+          FieldName = 'DOS_ESER_ADI'
+          Title.Caption = 'Eser Ad'#305
+          Width = 200
+          Sortable = True
+        end
+        item
+          FieldName = 'DOS_DOSYA_ADI'
+          Title.Caption = 'Dosya Ad'#305
+          Width = 200
+          Sortable = True
+        end
+        item
+          FieldName = 'DOS_YAZAR_ADI'
+          Title.Caption = 'Yazar Ad'#305
+          Width = 200
+        end
+        item
+          FieldName = 'DOS_ACIKLAMA'
+          Title.Caption = 'A'#231#305'klama'
+          Width = 250
+        end>
+    end
+  end
+  object dsDosyalar: TDataSource
+    DataSet = qDosyalar
+    Left = 360
+    Top = 328
+  end
+  object sil: TUniSweetAlert
+    Background = '#fff'
+    Title = ' '
+    Text = 'Silmek istedi'#287'inize emin misiniz?'
+    ConfirmButtonText = 'Evet'
+    CancelButtonText = 'Hay'#305'r'
+    ConfirmButtonColor = clGreen
+    CancelButtonColor = clRed
+    AlertType = atQuestion
+    Width = 500
+    Padding = 20
+    ShowCancelButton = True
+    ShowLoaderOnConfirm = True
+    OnConfirm = silConfirm
+    Left = 328
+    Top = 464
+  end
+  object qDosyalar: TUniQuery
+    Connection = UniServerModule.Data
+    SQL.Strings = (
+      'Select DOSYALAR.*, CIH_ADI, KAT_ADI'
+      'From DOSYALAR'
+      'Left Join KATEGORILER On DOS_KAT_ID=KAT_ID'
+      'Left Join CIHAZLAR On DOS_CIH_ID=CIH_ID')
+    SpecificOptions.Strings = (
+      'InterBase.FetchAll=True')
+    Active = True
+    Left = 296
+    Top = 328
+  end
+end

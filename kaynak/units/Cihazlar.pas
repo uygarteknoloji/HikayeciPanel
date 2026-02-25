@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Kullanici,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses, StrUtils, UniPageControl,
   uniGUIClasses, uniGUIFrame, Data.DB, MemDS, DBAccess, Uni, uniBasicGrid,
-  uniGUIBaseClasses, uniSweetAlert, uniDBGrid, uniMultiItem,
+  uniGUIBaseClasses, uniSweetAlert, uniDBGrid, uniMultiItem, Dosya,
   uniComboBox, uniEdit, uniButton, uniBitBtn, uniPanel;
 
 type
@@ -49,6 +49,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    PDosyaForm: TDosyaForm;
   end;
 
 implementation
@@ -122,12 +123,28 @@ end;
 
 procedure TCihazlarForm.btnKapatClick(Sender: TObject);
 begin
+  if PDosyaForm<>nil then
+  begin
+    PDosyaForm.qCihazlar.Close;
+    PDosyaForm.qCihazlar.Open;
+    UniMainModule.Focus(PDosyaForm.txtCihaz);
+  end;
   UniMainModule.FrameKapat(Self);
 end;
 
 procedure TCihazlarForm.btnSecClick(Sender: TObject);
 begin
   try
+    if PDosyaForm<>nil then
+    begin
+      if qCihazlar.IsEmpty then exit;
+      PDosyaForm.qCihazlar.Close;
+      PDosyaForm.qCihazlar.Open;
+      if not(PDosyaForm.qDosya.State in dsEditModes) then
+        PDosyaForm.qDosya.Edit;
+      PDosyaForm.qDosya.FieldByName('DOS_CIH_ID').AsInteger := qCihazlar.FieldByName('CIH_ID').AsInteger;
+      UniMainModule.Focus(PDosyaForm.txtCihaz);
+    end;
     UniMainModule.FrameKapat(Self);
   except on E: Exception do
     UniMainModule.Notification('', HataMesaj(e.Message), 2);

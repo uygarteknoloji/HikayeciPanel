@@ -3,7 +3,7 @@ unit Kategoriler;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Kullanici,
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Kullanici, Dosya,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses, StrUtils, UniPageControl,
   uniGUIClasses, uniGUIFrame, Data.DB, MemDS, DBAccess, Uni, uniBasicGrid,
   uniGridExporters, uniGUIBaseClasses, uniSweetAlert, uniDBGrid, uniMultiItem,
@@ -49,6 +49,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    PDosyaForm: TDosyaForm;
   end;
 
 implementation
@@ -122,12 +123,28 @@ end;
 
 procedure TKategorilerForm.btnKapatClick(Sender: TObject);
 begin
+  if PDosyaForm<>nil then
+  begin
+    PDosyaForm.qKategoriler.Close;
+    PDosyaForm.qKategoriler.Open;
+    UniMainModule.Focus(PDosyaForm.txtKategori);
+  end;
   UniMainModule.FrameKapat(Self);
 end;
 
 procedure TKategorilerForm.btnSecClick(Sender: TObject);
 begin
   try
+    if PDosyaForm<>nil then
+    begin
+      if qKategoriler.IsEmpty then exit;
+      PDosyaForm.qKategoriler.Close;
+      PDosyaForm.qKategoriler.Open;
+      if not(PDosyaForm.qDosya.State in dsEditModes) then
+        PDosyaForm.qDosya.Edit;
+      PDosyaForm.qDosya.FieldByName('DOS_KAT_ID').AsInteger := qKategoriler.FieldByName('KAT_ID').AsInteger;
+      UniMainModule.Focus(PDosyaForm.txtKategori);
+    end;
     UniMainModule.FrameKapat(Self);
   except on E: Exception do
     UniMainModule.Notification('', HataMesaj(e.Message), 2);
@@ -211,8 +228,21 @@ end;
 procedure TKategorilerForm.silConfirm(Sender: TObject);
 begin
   try
-    qKategoriler.Delete;
-    UniMainModule.Notification('', 'Kayýt Silindi', 3);
+    if DirectoryExists('files\docs\kategori\' + qKategoriler.FieldByName('KAT_KLASOR').AsString) then
+    begin
+      if RemoveDir('files\docs\kategori\' + qKategoriler.FieldByName('KAT_KLASOR').AsString) then
+      begin
+        qKategoriler.Delete;
+        UniMainModule.Notification('', 'Klasör ve Kayýt Silindi', 3);
+      end
+      else
+        UniMainModule.Notification('', 'Klasör ve Kayýt Silinemedi', 2);
+    end
+    else
+    begin
+      qKategoriler.Delete;
+      UniMainModule.Notification('', 'Klasör bulunamadý, kayýt silindi', 2);
+    end;
     UniMainModule.Focus(txtKategori);
   except on e:exception do
     UniMainModule.Notification('', HataMesaj(e.Message), 2);

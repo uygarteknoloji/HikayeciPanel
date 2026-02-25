@@ -1,0 +1,355 @@
+unit Kategoriler;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Kullanici, Dosya,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses, StrUtils, UniPageControl,
+  uniGUIClasses, uniGUIFrame, Data.DB, MemDS, DBAccess, Uni, uniBasicGrid,
+  uniGridExporters, uniGUIBaseClasses, uniSweetAlert, uniDBGrid, uniMultiItem,
+  uniComboBox, uniEdit, uniButton, uniBitBtn, uniPanel;
+
+type
+  TKategorilerForm = class(TUniFrame)
+    UniPanel1: TUniPanel;
+    UniToolBar1: TUniPanel;
+    btnYeni: TUniBitBtn;
+    btnDegistir: TUniBitBtn;
+    btnSil: TUniBitBtn;
+    btnKapat: TUniBitBtn;
+    UniPanel2: TUniPanel;
+    btnSec: TUniBitBtn;
+    pnlBul: TUniPanel;
+    UniPanel3: TUniPanel;
+    btnBul: TUniBitBtn;
+    txtKategori: TUniEdit;
+    txtDurum: TUniComboBox;
+    txtKayitSayisi: TUniComboBox;
+    Grid: TUniDBGrid;
+    dsKategoriler: TDataSource;
+    sil: TUniSweetAlert;
+    qKategoriler: TUniQuery;
+    procedure btnBulClick(Sender: TObject);
+    procedure btnKapatClick(Sender: TObject);
+    procedure btnSecClick(Sender: TObject);
+    procedure btnSilClick(Sender: TObject);
+    procedure GridAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
+    procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
+    procedure GridDblClick(Sender: TObject);
+    procedure btnDegistirClick(Sender: TObject);
+    procedure GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
+      Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+    procedure silConfirm(Sender: TObject);
+    procedure UniFrameAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
+    procedure UniFrameCreate(Sender: TObject);
+    procedure btnYeniClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    PDosyaForm: TDosyaForm;
+  end;
+
+implementation
+
+{$R *.dfm}
+
+uses ServerModule, MainModule, Utils, Kategori;
+
+procedure TKategorilerForm.btnBulClick(Sender: TObject);
+begin
+  try
+    qKategoriler.Close;
+    qKategoriler.Conditions.Clear;
+    pnlBul.Caption := '';
+    Grid.WebOptions.PageSize := StrToInt(txtKayitSayisi.Text);
+    if txtDurum.ItemIndex=0 then
+    begin
+      qKategoriler.Conditions.Add('DURUM', 'KAT_DURUM=1', True);
+      pnlBul.Caption := pnlBul.Caption + ifthen(pnlBul.Caption <> '', ', ') + 'Durum : Kullanýmda';
+    end
+    else
+    if txtDurum.ItemIndex=1 then
+    begin
+      qKategoriler.Conditions.Add('DURUM', 'KAT_DURUM=0', True);
+      pnlBul.Caption := pnlBul.Caption + ifthen(pnlBul.Caption <> '', ', ') + 'Durum : Kullaným Dýþý';
+    end;
+    if txtKategori.Text<>'' then
+    begin
+      qKategoriler.Conditions.Add('KOD', 'UPPER(KAT_ADI) LIKE ''' + Buyuk(SuzgecVerisiIsle(txtKategori.Text)) + '''', True);
+      pnlBul.Caption := pnlBul.Caption + ifthen(pnlBul.Caption <> '', ', ') + 'Kategori : ' + SuzgecVerisiIsle(txtKategori.Text);
+    end;
+
+    qKategoriler.Conditions.Enable;
+    qKategoriler.Open;
+    pnlBul.Visible := pnlBul.Caption <> '';
+
+    UniMainModule.Focus(Grid);
+  except on e:exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKategorilerForm.btnDegistirClick(Sender: TObject);
+var
+  I: Integer;
+  T: TUniTabSheet;
+  F: TKategoriForm;
+begin
+  try
+    if qKategoriler.IsEmpty then exit;
+    if isFrameOpenedInTab('TKategoriForm', TUniTabSheet(Self.Parent)) then exit;
+
+    UniMainModule.Tmp_ID := qKategoriler.FieldByName('KAT_ID').AsInteger;
+
+    T := TUniTabSheet(Self.Parent);
+    T.Caption := T.Caption + ' > Kategori [' + qKategoriler.FieldByName('KAT_ADI').AsString + ']';
+
+    for I := 0 to T.ControlCount-1 do
+      T.Controls[I].Visible := False;
+
+    F := TKategoriForm.Create(T);
+    F.UniPanel1.Caption :=  'Kategori [' + qKategoriler.FieldByName('KAT_ADI').AsString + ']';
+    F.PKategorilerForm := Self;
+    F.Align := alClient;
+    F.Parent := T;
+    F.Show;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKategorilerForm.btnKapatClick(Sender: TObject);
+begin
+  if PDosyaForm<>nil then
+  begin
+    PDosyaForm.qKategoriler.Close;
+    PDosyaForm.qKategoriler.Open;
+    UniMainModule.Focus(PDosyaForm.txtKategori);
+  end;
+  UniMainModule.FrameKapat(Self);
+end;
+
+procedure TKategorilerForm.btnSecClick(Sender: TObject);
+begin
+  try
+    if PDosyaForm<>nil then
+    begin
+      if qKategoriler.IsEmpty then exit;
+      PDosyaForm.qKategoriler.Close;
+      PDosyaForm.qKategoriler.Open;
+      if not(PDosyaForm.qDosya.State in dsEditModes) then
+        PDosyaForm.qDosya.Edit;
+      PDosyaForm.qDosya.FieldByName('DOS_KAT_ID').AsInteger := qKategoriler.FieldByName('KAT_ID').AsInteger;
+      UniMainModule.Focus(PDosyaForm.txtKategori);
+    end;
+    UniMainModule.FrameKapat(Self);
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKategorilerForm.btnSilClick(Sender: TObject);
+begin
+  try
+    if qKategoriler.IsEmpty then exit;
+    sil.Show();
+  except on e:exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+
+end;
+
+procedure TKategorilerForm.btnYeniClick(Sender: TObject);
+var
+  I: Integer;
+  T: TUniTabSheet;
+  F: TKategoriForm;
+begin
+  try
+    if isFrameOpenedInTab('TKategoriForm', TUniTabSheet(Self.Parent)) then exit;
+    UniMainModule.Tmp_ID := 0;
+
+    T := TUniTabSheet(Self.Parent);
+    T.Caption := T.Caption + ' > Kategori [Yeni]';
+
+    for I := 0 to T.ControlCount-1 do
+      T.Controls[I].Visible := False;
+
+    F := TKategoriForm.Create(T);
+    F.UniPanel1.Caption := 'Kategori [Yeni]';
+    F.PKategorilerForm := Self;
+    F.Align := alClient;
+    F.Parent := T;
+    F.Show;
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKategorilerForm.GridAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
+begin
+  if EventName='kaydet' then
+    UniMainModule.ListeKaydet(1, 'Kategoriler', qKategoriler, Grid)
+  else
+  if EventName='sil' then
+    UniMainModule.ListeVarsayilan(20);
+end;
+
+procedure TKategorilerForm.GridColumnSort(Column: TUniDBGridColumn;
+  Direction: Boolean);
+begin
+  UniMainModule.Sort(qKategoriler, Column.FieldName, Direction);
+end;
+
+procedure TKategorilerForm.GridDblClick(Sender: TObject);
+begin
+  if btnSec.Visible = true then
+    btnSecClick(btnSec)
+  else
+    btnDegistirClick(btnDegistir);
+end;
+
+procedure TKategorilerForm.GridDrawColumnCell(Sender: TObject; ACol,
+  ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+begin
+  if Column.FieldName='KAT_DURUM' then
+    if Column.Field.IsNull = false then
+      if Column.Field.AsInteger = 0 then
+      begin
+        Attribs.Color := clRed;
+        Attribs.Font.Color := clWhite;
+      end;
+end;
+
+procedure TKategorilerForm.silConfirm(Sender: TObject);
+begin
+  try
+    if DirectoryExists('files\docs\kategori' + qKategoriler.FieldByName('KAT_KLASOR').AsString) then
+      if RemoveDir('files\docs\kategori' + qKategoriler.FieldByName('KAT_KLASOR').AsString) then
+      begin
+        qKategoriler.Delete;
+        UniMainModule.Notification('', 'Klasör ve Kayýt Silindi', 3);
+      end
+      else
+        UniMainModule.Notification('', 'Klasör ve Kayýt Silinemedi', 2);
+    UniMainModule.Focus(txtKategori);
+  except on e:exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+procedure TKategorilerForm.UniFrameAjaxEvent(Sender: TComponent;
+  EventName: string; Params: TUniStrings);
+begin
+  if EventName = 'esc_pressed' then btnKapatClick(Sender);
+end;
+
+procedure TKategorilerForm.UniFrameCreate(Sender: TObject);
+begin
+  Grid.ClientEvents.ExtEvents.Values['viewready'] := 'function (sender, eOpts)' +
+       '{' +
+       'var tm = new Ext.util.TextMetrics();' +
+       'sender.view.tip = Ext.create("Ext.tip.ToolTip", {' +
+       'target: sender.view.el,' +
+       'delegate: sender.view.cellSelector,' +
+       'trackMouse: true,' +
+       'renderTo: Ext.getBody(),' +
+       'listeners: {' +
+       'beforeshow: function updateTipBody(tip) {' +
+       'gridColums = sender.view.getGridColumns();' +
+       'column = gridColums[tip.triggerElement.cellIndex];' +
+       'record = sender.view.getRecord(tip.triggerElement.parentNode);' +
+       'if (column.dataIndex !== "-1" && (column.getWidth() < (tm.getSize(record.data[parseInt(column.dataIndex)]).width) + 5)) {' +
+       'tip.update(record.data[parseInt(column.dataIndex)]);' +
+       '} else {' +
+       'return false;' +
+       '}' +
+       '}' +
+       '}' +
+       '});' +
+       '}';
+
+  Grid.ClientEvents.UniEvents.Values['pagingBar.afterCreate'] := 'function (sender){' +
+         'sender.dock = "top";' +
+         'sender.displayMsg = "Kayýt Adedi : {2}";' +
+         'sender.displayInfo = true;' +
+         'sender.insert(0, [{' +
+         'xtype: "label",' +
+         'cls: "grdfooter",' +
+         'padding: "0 0 1 5"' +
+         '},' +
+
+         '{' +
+         'xtype: "button",' +
+         'icon: "files/img/ok.png",' +
+         'tooltip: "Liste Görünümünü Kaydet",' +
+         'handler: function() {' +
+         'ajaxRequest(sender, "kaydet", []);' +
+         '}' +
+         '},' +
+
+         '{' +
+         'xtype: "tbseparator"' +
+         '},' +
+
+         '{' +
+         'xtype: "button",' +
+         'icon: "files/img/delete.png",' +
+         'tooltip: "Varsayýlan Görünüm",' +
+         'handler: function() {' +
+         'ajaxRequest(sender, "sil", []);' +
+         '}' +
+         '},' +
+
+         '{' +
+         'xtype: "tbseparator"' +
+         '}' +
+
+         ']);' +
+         '}';
+
+  self.ClientEvents.ExtEvents.Values['afterrender'] := 'function afterrender(sender, eOpts)' +
+         '{' +
+         '   sender.el.on("keydown", function(e){' +
+         '   if (e.getKey() == Ext.EventObject.ESC) {' +
+         '      ajaxRequest(sender, "esc_pressed", []);' +
+         '   }' +
+         '   });' +
+         '}';
+
+//  else
+//    Grid.ClientEvents.UniEvents.Values['pagingBar.afterCreate'] := 'function (sender){ sender.dock = "top"; }';
+
+  UniMainModule.ButtonMask([btnYeni, btnDegistir, btnBul, btnSec, btnKapat]);
+  UniMainModule.SetFocusBlur(TUniFrame(Self));
+
+  try
+    if qKategoriler.Active then
+      qKategoriler.Close;
+    qKategoriler.Open;
+
+    UniMainModule.ListeYukle(1, Grid);
+    if UniMainModule.Tmp_Form_Sec = 1 then
+    begin
+      UniMainModule.Tmp_Form_Sec := -1;
+      btnSec.Visible := true;
+      Grid.OnDblClick := btnSecClick;
+    end;
+    if UniMainModule.Tmp_Kod<>'' then
+    begin
+      txtKategori.Text := UniMainModule.Tmp_Kod;
+      UniMainModule.Tmp_Kod := '';
+      btnBulClick(btnBul);
+    end;
+    UniMainModule.Focus(txtKategori);
+
+  except on e: exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
+end;
+
+end.

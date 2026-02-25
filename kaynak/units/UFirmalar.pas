@@ -35,7 +35,6 @@ type
     XLSExporter: TUniGridExcelExporter;
     qFirmalar: TUniQuery;
     procedure btnBulClick(Sender: TObject);
-    procedure btnGridExportClick(Sender: TObject);
     procedure btnKapatClick(Sender: TObject);
     procedure btnSecClick(Sender: TObject);
     procedure btnSilClick(Sender: TObject);
@@ -125,17 +124,6 @@ begin
   except on E: Exception do
     UniMainModule.Notification('', HataMesaj(e.Message), 2);
   end;
-end;
-
-procedure TUFirmalarForm.btnGridExportClick(Sender: TObject);
-begin
-  try
-    if qFirmalar.IsEmpty then exit;
-    Grid.Exporter.ExportGrid;
-  except on e:exception do
-    UniMainModule.Notification('', HataMesaj(e.Message), 2);
-  end;
-
 end;
 
 procedure TUFirmalarForm.btnKapatClick(Sender: TObject);

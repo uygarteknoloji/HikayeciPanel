@@ -186,7 +186,6 @@ object UFirmalarForm: TUFirmalarForm
         TabOrder = 5
         Images = UniMainModule.ikonListe
         ImageIndex = 4
-        OnClick = btnGridExportClick
       end
       object btnAdres: TUniBitBtn
         Left = 226

@@ -105,6 +105,8 @@ begin
         UniMainModule.Focus(txtKlasor);
         exit;
       end;
+      if not DirectoryExists('files\docs\kategori\' + txtKlasor.Text) then
+        ForceDirectories('files\docs\kategori\' + txtKlasor.Text);
       qKategori.Post;
       qKategori.ParamByName('KAT_ID').AsInteger := qKategori.FieldByName('KAT_ID').AsInteger;
       UniMainModule.Notification('', 'Ýþlem Tamamlandý', 3);
@@ -171,14 +173,27 @@ end;
 procedure TKategoriForm.silConfirm(Sender: TObject);
 begin
   try
-    qKategori.Delete;
-    if PKategorilerForm<>nil then
+    if DirectoryExists('files\docs\kategori' + txtKlasor.Text) then
     begin
-      UniMainModule.DataSetRefresh(PKategorilerForm.qKategoriler, 'KAT_ID', qKategori.FieldByName('KAT_ID').AsInteger);
-      UniMainModule.Focus(PKategorilerForm.txtKategori);
+      if RemoveDir('files\docs\kategori' + txtKlasor.Text) then
+      begin
+        qKategori.Delete;
+        UniMainModule.Notification('', 'Klasör ve Kayýt Silindi', 3);
+        if PKategorilerForm<>nil then
+        begin
+          UniMainModule.DataSetRefresh(PKategorilerForm.qKategoriler, 'KAT_ID', qKategori.FieldByName('KAT_ID').AsInteger);
+          UniMainModule.Focus(PKategorilerForm.txtKategori);
+        end;
+        UniMainModule.FrameKapat(Self);
+      end
+      else
+        UniMainModule.Notification('', 'Klasör ve Kayýt Silinemedi', 2);
+    end
+    else
+    begin
+      qKategori.Delete;
+      UniMainModule.Notification('', 'Klasör bulunamadý, kayýt silindi', 1);
     end;
-    UniMainModule.Notification('', 'Kayýt Silindi', 3);
-    UniMainModule.FrameKapat(Self);
   except on e:exception do
     UniMainModule.Notification('', HataMesaj(e.Message), 2);
   end;
