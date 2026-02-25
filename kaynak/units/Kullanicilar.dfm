@@ -383,11 +383,13 @@ object KullanicilarForm: TKullanicilarForm
           FieldName = 'KUL_UYELIK_TURU'
           Title.Caption = #220'yelik T'#252'r'#252
           Width = 111
+          Visible = False
         end
         item
           FieldName = 'KUL_UYELIK_BEDELI_ODENDI'
           Title.Caption = #220'yelik Bedeli '#214'dendi'
           Width = 183
+          Visible = False
           Alignment = taLeftJustify
           CheckBoxField.BooleanFieldOnly = False
           CheckBoxField.FieldValues = '1;0'
@@ -397,6 +399,7 @@ object KullanicilarForm: TKullanicilarForm
           FieldName = 'KUL_BASTARIHI'
           Title.Caption = 'Ba'#351'lang'#305#231' Tarihi'
           Width = 139
+          Visible = False
           Sortable = True
           DisplayFormat = 'dd.MM.yyyy'
         end
@@ -404,6 +407,7 @@ object KullanicilarForm: TKullanicilarForm
           FieldName = 'KUL_BITTARIHI'
           Title.Caption = 'Biti'#351' Tarihi'
           Width = 148
+          Visible = False
           Sortable = True
           DisplayFormat = 'dd.MM.yyyy'
         end

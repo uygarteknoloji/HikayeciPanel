@@ -53,6 +53,10 @@ type
     procedure btnYeniClick(Sender: TObject);
     procedure dsKullaniciStateChange(Sender: TObject);
     procedure iptalConfirm(Sender: TObject);
+    procedure txtFirmaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure txtFirmaTriggerEvent(Sender: TUniCustomComboBox;
+      AButtonId: Integer);
   private
     { Private declarations }
     KUL_ID: integer;
@@ -67,7 +71,7 @@ implementation
 
 {$R *.dfm}
 
-uses ServerModule, MainModule, Utils;
+uses ServerModule, MainModule, Utils, UFirmalar;
 
 
 procedure TKullaniciForm.btnKapatClick(Sender: TObject);
@@ -234,6 +238,44 @@ begin
   finally
     qFirmalar.EnableControls;
   end;
+end;
+
+procedure TKullaniciForm.txtFirmaKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_F4 then
+    txtFirmaTriggerEvent(txtFirma, 1);
+end;
+
+procedure TKullaniciForm.txtFirmaTriggerEvent(Sender: TUniCustomComboBox;
+  AButtonId: Integer);
+var
+  I: Integer;
+  T: TUniTabSheet;
+  F: TUFirmalarForm;
+begin
+  if AButtonId=1 then
+  begin
+    try
+      if isFrameOpenedInTab('TUFirmalarForm', TUniTabSheet(Self.Parent)) then exit;
+      T := TUniTabSheet(Self.Parent);
+      T.Caption := T.Caption + ' > Firmalar';
+
+      for I := 0 to T.ControlCount-1 do
+        T.Controls[I].Visible := False;
+
+      UniMainModule.Tmp_Form_Sec := 1;
+      F := TUFirmalarForm.Create(T);
+      F.UniPanel2.Caption :=  'Firmalar';
+      F.PKullaniciForm := Self;
+      F.Align := alClient;
+      F.Parent := T;
+      F.Show;
+    except on E: Exception do
+      UniMainModule.Notification('', HataMesaj(e.Message), 2);
+    end;
+  end;
+
 end;
 
 procedure TKullaniciForm.UniFrameAjaxEvent(Sender: TComponent;

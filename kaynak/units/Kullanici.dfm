@@ -168,7 +168,9 @@ object KullaniciForm: TKullaniciForm
     Align = alClient
     Color = 15724527
     TabOrder = 1
-    ScrollHeight = 399
+    ExplicitLeft = -176
+    ExplicitTop = 92
+    ScrollHeight = 343
     ScrollWidth = 472
     object txtAdi: TUniDBEdit
       Left = 20
@@ -244,6 +246,8 @@ object KullaniciForm: TKullaniciForm
           Hint = 'F4 - Firmalar'
         end>
       Style = csDropDown
+      OnTriggerEvent = txtFirmaTriggerEvent
+      OnKeyDown = txtFirmaKeyDown
       OnEnter = txtFirmaEnter
     end
     object txtTelefon: TUniDBEdit
@@ -271,8 +275,8 @@ object KullaniciForm: TKullaniciForm
       FieldLabelSeparator = ' '
     end
     object txtAciklama: TUniDBMemo
-      Left = 18
-      Top = 305
+      Left = 20
+      Top = 249
       Width = 450
       Height = 94
       Hint = ''
@@ -334,8 +338,8 @@ object KullaniciForm: TKullaniciForm
       FieldLabelSeparator = ' '
     end
     object txtBaslangic: TUniDBDateTimePicker
-      Left = 18
-      Top = 247
+      Left = 482
+      Top = 423
       Width = 272
       Height = 23
       Hint = ''
@@ -343,6 +347,7 @@ object KullaniciForm: TKullaniciForm
       Margins.Top = 5
       Margins.Right = 5
       Margins.Bottom = 5
+      Visible = False
       DataField = 'KUL_BASTARIHI'
       DataSource = dsKullanici
       DateTime = 45934.000000000000000000
@@ -356,8 +361,8 @@ object KullaniciForm: TKullaniciForm
       FieldLabelSeparator = ' '
     end
     object txtBitis: TUniDBDateTimePicker
-      Left = 298
-      Top = 247
+      Left = 762
+      Top = 423
       Width = 172
       Height = 23
       Hint = ''
@@ -365,6 +370,7 @@ object KullaniciForm: TKullaniciForm
       Margins.Top = 5
       Margins.Right = 5
       Margins.Bottom = 5
+      Visible = False
       DataField = 'KUL_BITTARIHI'
       DataSource = dsKullanici
       DateTime = 45934.000000000000000000
@@ -376,8 +382,8 @@ object KullaniciForm: TKullaniciForm
       DisabledDates = <>
     end
     object txtUyelikBedeli: TUniDBCheckBox
-      Left = 300
-      Top = 279
+      Left = 764
+      Top = 455
       Width = 97
       Height = 17
       Hint = ''
@@ -385,6 +391,7 @@ object KullaniciForm: TKullaniciForm
       Margins.Top = 5
       Margins.Right = 5
       Margins.Bottom = 5
+      Visible = False
       DataField = 'KUL_DURUM'
       DataSource = dsKullanici
       ValueChecked = '1'
@@ -397,8 +404,8 @@ object KullaniciForm: TKullaniciForm
       Color = clBtnFace
     end
     object txtUyelikTuru: TUniDBComboBox
-      Left = 18
-      Top = 275
+      Left = 482
+      Top = 451
       Width = 272
       Height = 23
       Hint = ''
@@ -406,6 +413,7 @@ object KullaniciForm: TKullaniciForm
       Margins.Top = 5
       Margins.Right = 5
       Margins.Bottom = 5
+      Visible = False
       DataField = 'KUL_UYELIK_TURU'
       DataSource = dsKullanici
       Style = csDropDownList

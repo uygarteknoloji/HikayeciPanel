@@ -21,7 +21,9 @@ uses
   Kategoriler in 'units\Kategoriler.pas' {KategorilerForm: TUniFrame},
   Kategori in 'units\Kategori.pas' {KategoriForm: TUniFrame},
   Cihaz in 'units\Cihaz.pas' {CihazForm: TUniFrame},
-  Cihazlar in 'units\Cihazlar.pas' {CihazlarForm: TUniFrame};
+  Cihazlar in 'units\Cihazlar.pas' {CihazlarForm: TUniFrame},
+  UFirma in 'units\UFirma.pas' {UFirmaForm: TUniFrame},
+  UFirmalar in 'units\UFirmalar.pas' {UFirmalarForm: TUniFrame};
 
 {$R *.res}
 

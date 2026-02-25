@@ -2,6 +2,7 @@ object UniServerModule: TUniServerModule
   OnCreate = UniGUIServerModuleCreate
   TempFolder = 'temp\'
   SessionTimeout = 1200000
+  Port = 8088
   Title = 'Hikayeci'
   SuppressErrors = []
   Bindings = <>
