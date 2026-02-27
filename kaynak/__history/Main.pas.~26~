@@ -1,0 +1,412 @@
+unit Main;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses, UniDBEdit, UniEdit,
+  uniGUIClasses, uniGUIRegClasses, uniGUIForm, Vcl.Menus, uniMainMenu,
+  uniImageList, uniGUIBaseClasses, uniTimer, uniGUIFrame, uniPageControl,
+  uniLabel, uniPanel, uniStatusBar, uniSplitter, Vcl.Imaging.pngimage, uniImage,
+  uniButton, uniBitBtn, uniMultiItem, uniComboBox, uniToolBar, uniTreeView,
+  uniScrollBox, Data.DB, MemDS, DBAccess, Uni, uniURLFrame;
+
+
+type
+  TMainForm = class(TUniForm)
+    UniPanel1: TUniPanel;
+    UniToolBar1: TUniToolBar;
+    UniToolButton1: TUniToolButton;
+    UniToolButton4: TUniToolButton;
+    UniToolButton7: TUniToolButton;
+    UniToolButton10: TUniToolButton;
+    pnlGiris: TUniPanel;
+    btnGiris: TUniBitBtn;
+    UniImage1: TUniImage;
+    UniPanel2: TUniScrollBox;
+    UniPanel4: TUniPanel;
+    btnKategoriler: TUniImage;
+    UniPanel5: TUniPanel;
+    btnReklam: TUniImage;
+    UniPanel3: TUniPanel;
+    btnDosyalar: TUniImage;
+    UniPanel6: TUniPanel;
+    btnCihazlar: TUniImage;
+    UniStatusBar1: TUniStatusBar;
+    UniContainerPanel2: TUniContainerPanel;
+    UniPageControl1: TUniPageControl;
+    UniTabSheet1: TUniTabSheet;
+    UniURLFrame1: TUniURLFrame;
+    UniNativeImageList1: TUniNativeImageList;
+    UniThemePopup: TUniPopupMenu;
+    UniTimer1: TUniTimer;
+    qDuyurular: TUniQuery;
+    procedure btnGirisClick(Sender: TObject);
+    procedure KullanicilarClick(Sender: TObject);
+    procedure btnKategorilerClick(Sender: TObject);
+    procedure UniFormCreate(Sender: TObject);
+    procedure btnCihazlarClick(Sender: TObject);
+    procedure btnDosyalarClick(Sender: TObject);
+    procedure btnReklamClick(Sender: TObject);
+  private
+    { Private declarations }
+    btnNumber: integer;
+    TabNo: integer;
+    PSString : string;
+    FirstLoad : Boolean;
+    procedure GetThemes;
+    procedure ThemeClick(Sender: TObject);
+  public
+    { Public declarations }
+  end;
+
+function MainForm: TMainForm;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  uniGUIVars, MainModule, ServerModule, uniGUIApplication, uniStrUtils,
+  Login, Kullanicilar, Utils, YeniSifreOlustur, Kategoriler, Cihazlar,
+  Dosyalar, Reklamlar;
+
+function MainForm: TMainForm;
+begin
+  Result := TMainForm(UniMainModule.GetFormInstance(TMainForm));
+end;
+
+procedure TMainForm.btnKategorilerClick(Sender: TObject);
+var
+  T: TUniTabSheet;
+  KategorilerForm: TKategorilerForm;
+begin
+  if not UniMainModule.isLogin then
+  begin
+    UniMainModule.Notification('', 'Kullanýcý giriþi yapmalýsýnýz', 2);
+    Exit;
+  end;
+  try
+    TabNo := TabNo + 1;
+    T := TUniTabSheet.Create(Self);
+    T.Name := 'TS' + IntToStr(tabno);
+    T.PageControl := UniPageControl1;
+    T.Closable := True;
+    T.Caption := 'Kategoriler';
+    UniPageControl1.ActivePage := T;
+    KategorilerForm := TKategorilerForm.Create(T);
+    KategorilerForm.Align := alClient;
+    KategorilerForm.Parent := T;
+    KategorilerForm.Show;
+  except on e: exception do
+    begin
+     UniMainModule.Notification('', HataMesaj(e.Message), 2);
+    end;
+  end;
+end;
+
+procedure TMainForm.btnReklamClick(Sender: TObject);
+var
+  T: TUniTabSheet;
+  ReklamlarForm: TReklamlarForm;
+begin
+  if not UniMainModule.isLogin then
+  begin
+    UniMainModule.Notification('', 'Kullanýcý giriþi yapmalýsýnýz', 2);
+    Exit;
+  end;
+  try
+    TabNo := TabNo + 1;
+    T := TUniTabSheet.Create(Self);
+    T.Name := 'TS' + IntToStr(tabno);
+    T.PageControl := UniPageControl1;
+    T.Closable := True;
+    T.Caption := 'Reklamlar';
+    UniPageControl1.ActivePage := T;
+    ReklamlarForm := TReklamlarForm.Create(T);
+    ReklamlarForm.Align := alClient;
+    ReklamlarForm.Parent := T;
+    ReklamlarForm.Show;
+  except on e: exception do
+    begin
+     UniMainModule.Notification('', HataMesaj(e.Message), 2);
+    end;
+  end;
+end;
+
+procedure TMainForm.btnCihazlarClick(Sender: TObject);
+var
+  T: TUniTabSheet;
+  CihazlarForm: TCihazlarForm;
+begin
+  if not UniMainModule.isLogin then
+  begin
+    UniMainModule.Notification('', 'Kullanýcý giriþi yapmalýsýnýz', 2);
+    Exit;
+  end;
+  try
+    TabNo := TabNo + 1;
+    T := TUniTabSheet.Create(Self);
+    T.Name := 'TS' + IntToStr(tabno);
+    T.PageControl := UniPageControl1;
+    T.Closable := True;
+    T.Caption := 'Cihazlar';
+    UniPageControl1.ActivePage := T;
+    CihazlarForm := TCihazlarForm.Create(T);
+    CihazlarForm.Align := alClient;
+    CihazlarForm.Parent := T;
+    CihazlarForm.Show;
+  except on e: exception do
+    begin
+     UniMainModule.Notification('', HataMesaj(e.Message), 2);
+    end;
+  end;
+end;
+
+procedure TMainForm.btnDosyalarClick(Sender: TObject);
+var
+  T: TUniTabSheet;
+  DosyalarForm: TDosyalarForm;
+begin
+  if not UniMainModule.isLogin then
+  begin
+    UniMainModule.Notification('', 'Kullanýcý giriþi yapmalýsýnýz', 2);
+    Exit;
+  end;
+  try
+    TabNo := TabNo + 1;
+    T := TUniTabSheet.Create(Self);
+    T.Name := 'TS' + IntToStr(tabno);
+    T.PageControl := UniPageControl1;
+    T.Closable := True;
+    T.Caption := 'Dosyalar';
+    UniPageControl1.ActivePage := T;
+    DosyalarForm := TDosyalarForm.Create(T);
+    DosyalarForm.Align := alClient;
+    DosyalarForm.Parent := T;
+    DosyalarForm.Show;
+  except on e: exception do
+    begin
+     UniMainModule.Notification('', HataMesaj(e.Message), 2);
+    end;
+  end;
+end;
+
+procedure TMainForm.btnGirisClick(Sender: TObject);
+var
+  LoginForm: TLoginForm;
+  SonTarih: TDateTime;
+  Bugun: TDateTime;
+  KalanGun: Integer;
+  btnKullanicilar: TUniToolButton;
+begin
+  LoginForm := TLoginForm.Create(UniApplication);
+  LoginForm.ShowModal(
+    procedure(Sender: TComponent; AResult: Integer)
+    begin
+      if AResult = mrOk then
+      begin
+        if UniMainModule.isLogin then
+        begin
+          Bugun := Date;
+          SonTarih := UniMainModule.KUL_BITTARIHI;
+          KalanGun := Trunc(SonTarih - Bugun);
+          UniStatusBar1.Panels[0].Text := 'Hoþgeldiniz Sayýn, ' + UniMainModule.KUL_ADI_SOYADI;
+          if KalanGun > 0 then
+            UniStatusBar1.Panels[0].Text := UniStatusBar1.Panels[0].Text + ', ' + Format('Aboneliðinizin bitmesine %d gün kaldý.', [KalanGun])
+          else if KalanGun = 0 then
+            UniStatusBar1.Panels[0].Text := UniStatusBar1.Panels[0].Text + ', ' + 'Aboneliðiniz bugün sona eriyor!'
+          else begin
+            UniMainModule.Notification('', 'Abonelik süreniz dolmuþtur. Lütfen aboneliðinizi yenileyiniz', 1);
+            exit;
+          end;
+          if UniMainModule.KUL_ROLU='Sistem Yöneticisi' then
+          begin
+            btnKullanicilar := TUniToolButton.Create(UniToolBar1);
+            btnKullanicilar.Parent := UniToolBar1;
+            btnKullanicilar.OnClick := KullanicilarClick;
+            btnKullanicilar.ImageIndex := 6;
+            btnKullanicilar.Hint := 'Kullanýcýlar';
+            btnKullanicilar.ShowHint := true;
+            btnKullanicilar.ScreenMask.Enabled := true;
+            btnKullanicilar.ScreenMask.Target := MainForm;
+          end;
+          try
+            qDuyurular.Close;
+            qDuyurular.Open;
+            UniMainModule.Duyurular := '';
+            UniStatusBar1.Panels[1].Text := '';
+            while not qDuyurular.Eof do
+            begin
+              UniMainModule.Duyurular := UniMainModule.Duyurular + qDuyurular.FieldByName('DYR_KONU').AsString + ', ';
+              qDuyurular.Next;
+            end;
+            if UniMainModule.Duyurular<>'' then
+            begin
+              UniStatusBar1.Panels[1].Text := UniMainModule.Duyurular;
+              UniTimer1.Enabled := True;
+            end;
+          except on e:exception do
+            UniMainModule.Notification('', HataMesaj(e.Message), 2);
+          end;
+          pnlGiris.Hide;
+        end;
+      end
+      else if AResult = mrCancel then
+      begin
+        UniMainModule.isLogin := false;
+      end;
+    end
+  );
+end;
+
+procedure TMainForm.KullanicilarClick(Sender: TObject);
+var
+  T: TUniTabSheet;
+  KullanicilarForm: TKullanicilarForm;
+begin
+  if not UniMainModule.isLogin then
+  begin
+    UniMainModule.Notification('', 'Kullanýcý giriþi yapmalýsýnýz', 2);
+    Exit;
+  end;
+  try
+    TabNo := TabNo + 1;
+    T := TUniTabSheet.Create(Self);
+    T.Name := 'TS' + IntToStr(tabno);
+    T.PageControl := UniPageControl1;
+    T.Closable := True;
+    T.Caption := 'Kullanýcýlar';
+    UniPageControl1.ActivePage := T;
+    KullanicilarForm := TKullanicilarForm.Create(T);
+    KullanicilarForm.Align := alClient;
+    KullanicilarForm.Parent := T;
+    KullanicilarForm.Show;
+  except on e: exception do
+    begin
+     UniMainModule.Notification('', HataMesaj(e.Message), 2);
+    end;
+  end;
+
+end;
+
+procedure TMainForm.GetThemes;
+var
+  S : TUniStringArray;
+  I : Integer;
+  M : TUniMenuItem;
+begin
+  S := UniServerModule.ThemeManager.AllThemes;
+
+  UniThemePopup.Items.Clear;
+  for I := Low(S) to High(S) do
+  begin
+    M := TUniMenuItem.Create(Self);
+    M.Caption := S[I];
+    M.Checked := SameText(M.Caption, UniMainModule.Theme);
+    M.OnClick := ThemeClick;
+    UniThemePopup.Items.Add(M);
+  end;
+end;
+
+procedure TMainForm.ThemeClick(Sender: TObject);
+var
+  S : string;
+begin
+  S := UniSession.UrlReferer;
+  if Pos('xtheme', S) > 0 then
+  begin
+    S := StringReplace(S, 'xtheme=', 'nnn=', []); // remove theme from current URL
+    UniSession.UrlReferer := S;
+  end;
+
+  UniMainModule.Theme := (Sender as TUniMenuItem).Caption;
+end;
+
+procedure TMainForm.UniFormCreate(Sender: TObject);
+var
+  q: TUniQuery;
+  idParam: string;
+begin
+
+  GetThemes;
+  btnCihazlar.ClientEvents.ExtEvents.Values['afterrender'] :=
+    'function(sender, eOpts) {' +
+    '  sender.getEl().on("mousedown", function() {' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/cihazlarhover.png");' +
+    '  });' +
+    '  sender.getEl().on("mouseup", function() {' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/cihazlar.png");' +
+    '  });' +
+    '  sender.getEl().on("mouseout", function() {' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/cihazlar.png");' +
+    '  });' +
+    '}';
+  btnKategoriler.ClientEvents.ExtEvents.Values['afterrender'] :=
+    'function(sender, eOpts) {' +
+    '  sender.getEl().on("mousedown", function() {' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/kategorilerhover.png");' +
+    '  });' +
+    '  sender.getEl().on("mouseup", function() {' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/kategoriler.png");' +
+    '  });' +
+    '  sender.getEl().on("mouseout", function() {' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/kategoriler.png");' +
+    '  });' +
+    '}';
+  btnDosyalar.ClientEvents.ExtEvents.Values['afterrender'] :=
+    'function(sender, eOpts) {' +
+    '  sender.getEl().on("mousedown", function() {' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/dosyalarhover.png");' +
+    '  });' +
+    '  sender.getEl().on("mouseup", function() {' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/dosyalar.png");' +
+    '  });' +
+    '  sender.getEl().on("mouseout", function() {' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/dosyalar.png");' +
+    '  });' +
+    '}';
+  btnReklam.ClientEvents.ExtEvents.Values['afterrender'] :=
+    'function(sender, eOpts) {' +
+    '  sender.getEl().on("mousedown", function() {' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/reklamyonetimihover.png");' +
+    '  });' +
+    '  sender.getEl().on("mouseup", function() {' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/reklamyonetimi.png");' +
+    '  });' +
+    '  sender.getEl().on("mouseout", function() {' +
+    '    sender.getEl().dom.childNodes[0].setAttribute("src", "files/img/reklamyonetimi.png");' +
+    '  });' +
+    '}';
+
+
+
+  idParam := UniApplication.Parameters.Values['a'];
+  if idParam <> '' then
+  begin
+    q := TUniQuery.Create(UniApplication);
+    try
+      try
+        q.Connection := UniServerModule.ServisDB;
+        q.SQL.Add('Select * From KULLANICILAR Where KUL_AKTIVASYON_KODU=:KUL_AKTIVASYON_KODU');
+        q.ParamByName('KUL_AKTIVASYON_KODU').AsString := idParam;
+        q.Open;
+        if not q.IsEmpty then
+        begin
+          UniMainModule.Tmp_ID := q.FieldByName('KUL_ID').AsInteger;
+          YeniSifreOlusturForm.ShowModal;
+        end;
+      except on e: exception do
+        UniMainModule.Notification('', HataMesaj(e.Message), 2);
+      end;
+    finally
+      FreeAndNil(q);
+    end;
+  end;
+
+end;
+
+initialization
+  RegisterAppFormClass(TMainForm);
+
+end.

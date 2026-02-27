@@ -24,13 +24,13 @@ type
     btnGiris: TUniBitBtn;
     UniImage1: TUniImage;
     UniPanel2: TUniScrollBox;
-    UniPanel4: TUniPanel;
+    pnlKategoriler: TUniPanel;
     btnKategoriler: TUniImage;
-    UniPanel5: TUniPanel;
+    pnlReklam: TUniPanel;
     btnReklam: TUniImage;
-    UniPanel3: TUniPanel;
+    pnlDosyalar: TUniPanel;
     btnDosyalar: TUniImage;
-    UniPanel6: TUniPanel;
+    pnlCihazlar: TUniPanel;
     btnCihazlar: TUniImage;
     UniStatusBar1: TUniStatusBar;
     UniContainerPanel2: TUniContainerPanel;
@@ -48,6 +48,7 @@ type
     procedure btnCihazlarClick(Sender: TObject);
     procedure btnDosyalarClick(Sender: TObject);
     procedure btnReklamClick(Sender: TObject);
+    procedure UniFormShow(Sender: TObject);
   private
     { Private declarations }
     btnNumber: integer;
@@ -404,6 +405,25 @@ begin
     end;
   end;
 
+end;
+
+procedure TMainForm.UniFormShow(Sender: TObject);
+begin
+  if UniMainModule.KUL_ROLU='Kullanýcý' then
+  begin
+    UniPanel1.Visible := false;
+  end;
+  if UniMainModule.KUL_ROLU='Yazar' then
+  begin
+    pnlCihazlar.Visible := false;
+    pnlKategoriler.Visible := false;
+    pnlReklam.Visible := false;
+  end;
+  if UniMainModule.KUL_ROLU='Editör' then
+  begin
+    pnlCihazlar.Visible := false;
+    pnlReklam.Visible := false;
+  end;
 end;
 
 initialization

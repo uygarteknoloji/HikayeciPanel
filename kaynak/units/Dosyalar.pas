@@ -31,6 +31,7 @@ type
     qDosyalar: TUniQuery;
     txtKategori: TUniEdit;
     txtEserAdi: TUniEdit;
+    txtOnay: TUniComboBox;
     procedure btnBulClick(Sender: TObject);
     procedure btnKapatClick(Sender: TObject);
     procedure btnSecClick(Sender: TObject);
@@ -76,6 +77,17 @@ begin
     begin
       qDosyalar.Conditions.Add('DURUM', 'DOS_DURUM=0', True);
       pnlBul.Caption := pnlBul.Caption + ifthen(pnlBul.Caption <> '', ', ') + 'Durum : Kullaným Dýþý';
+    end;
+    if txtOnay.ItemIndex=0 then
+    begin
+      qDosyalar.Conditions.Add('ONAY', 'DOS_ONAYLANDI=1', True);
+      pnlBul.Caption := pnlBul.Caption + ifthen(pnlBul.Caption <> '', ', ') + 'Onay Durumu : Onaylandý';
+    end
+    else
+    if txtDurum.ItemIndex=1 then
+    begin
+      qDosyalar.Conditions.Add('ONAY', 'DOS_ONAYLANDI=0', True);
+      pnlBul.Caption := pnlBul.Caption + ifthen(pnlBul.Caption <> '', ', ') + 'Onay Durumu : Onaylanmadý';
     end;
     if txtCihaz.Text<>'' then
     begin
@@ -216,6 +228,18 @@ begin
       if Column.Field.AsInteger = 0 then
       begin
         Attribs.Color := clRed;
+        Attribs.Font.Color := clWhite;
+      end;
+  if Column.FieldName='DOS_ONAYLANDI' then
+    if Column.Field.IsNull = false then
+      if Column.Field.AsInteger = 0 then
+      begin
+        Attribs.Color := clYellow;
+        Attribs.Font.Color := clBlack;
+      end
+      else
+      begin
+        Attribs.Color := clGreen;
         Attribs.Font.Color := clWhite;
       end;
 end;

@@ -1,0 +1,13 @@
+How to setup the Addon:
+1.	Download both the CustomPlanetAddon.zip and the CustomPlanetImages.zip (Depending on your addon version, the image folder will be named a bit differently)
+2.	Extract the CustomPlanetImages.zip, so that it is a normal folder (The folder is nearly 4 GB big, so put it where you have space on your hard drive.)
+3.	Keep the CustomPlanetAddon.zip as it is, and install it in Blender in the user preferences as an addon (As you would do with all addons. More here: https://docs.blender.org/manual/en/latest/editors/preferences/addons.html).
+4.	Don’t forget to also activate it.
+5.	In Blender you can now press the N key, to open the sidebar. There you will find a new tab called Custom Planet.
+6.      Pick the path of your image folder.
+
+You are now ready to create planets, by pressing the new button.
+
+
+
+

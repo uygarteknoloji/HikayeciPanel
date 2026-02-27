@@ -4,6 +4,7 @@ object MainForm: TMainForm
   ClientHeight = 761
   ClientWidth = 1270
   Caption = 'Hikayeci Y'#246'netim Paneli'
+  OnShow = UniFormShow
   OldCreateOrder = False
   MonitoredKeys.Keys = <>
   OnCreate = UniFormCreate
@@ -23,6 +24,7 @@ object MainForm: TMainForm
     Caption = ''
     Collapsible = True
     CollapseDirection = cdLeft
+    ExplicitHeight = 714
     object UniToolBar1: TUniToolBar
       Left = 0
       Top = 713
@@ -39,6 +41,7 @@ object MainForm: TMainForm
       TabOrder = 1
       ParentColor = False
       Color = clBtnFace
+      ExplicitTop = 688
       object UniToolButton1: TUniToolButton
         Left = 0
         Top = 0
@@ -376,8 +379,9 @@ object MainForm: TMainForm
       Align = alClient
       TabOrder = 3
       ScrollDirection = sdVertical
+      ExplicitHeight = 643
       ScrollHeight = 544
-      object UniPanel4: TUniPanel
+      object pnlKategoriler: TUniPanel
         Left = 0
         Top = 136
         Width = 204
@@ -400,7 +404,7 @@ object MainForm: TMainForm
           OnClick = btnKategorilerClick
         end
       end
-      object UniPanel5: TUniPanel
+      object pnlReklam: TUniPanel
         Left = 0
         Top = 408
         Width = 204
@@ -423,7 +427,7 @@ object MainForm: TMainForm
           OnClick = btnReklamClick
         end
       end
-      object UniPanel3: TUniPanel
+      object pnlDosyalar: TUniPanel
         Left = 0
         Top = 272
         Width = 204
@@ -446,7 +450,7 @@ object MainForm: TMainForm
           OnClick = btnDosyalarClick
         end
       end
-      object UniPanel6: TUniPanel
+      object pnlCihazlar: TUniPanel
         Left = 0
         Top = 0
         Width = 204
@@ -486,6 +490,8 @@ object MainForm: TMainForm
     SizeGrip = False
     Align = alBottom
     ParentColor = False
+    ExplicitTop = 714
+    ExplicitWidth = 1262
   end
   object UniContainerPanel2: TUniContainerPanel
     Left = 206
@@ -496,6 +502,8 @@ object MainForm: TMainForm
     ParentColor = False
     Align = alClient
     TabOrder = 2
+    ExplicitWidth = 1056
+    ExplicitHeight = 714
     object UniPageControl1: TUniPageControl
       Left = 0
       Top = 0
@@ -505,9 +513,13 @@ object MainForm: TMainForm
       ActivePage = UniTabSheet1
       Align = alClient
       TabOrder = 1
+      ExplicitWidth = 1056
+      ExplicitHeight = 714
       object UniTabSheet1: TUniTabSheet
         Hint = ''
         Caption = 'Hikayeci'
+        ExplicitWidth = 1048
+        ExplicitHeight = 686
         object UniURLFrame1: TUniURLFrame
           Left = 0
           Top = 0
@@ -957,6 +969,8 @@ object MainForm: TMainForm
           TabOrder = 0
           ParentColor = False
           Color = clBtnFace
+          ExplicitWidth = 1048
+          ExplicitHeight = 686
         end
       end
     end

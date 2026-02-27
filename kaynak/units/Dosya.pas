@@ -38,6 +38,8 @@ type
     qKategoriler: TUniQuery;
     dsKategoriler: TDataSource;
     Yukle: TUniFileUpload;
+    txtOnay: TUniDBCheckBox;
+    txtMetin: TUniDBMemo;
     procedure UniFrameCreate(Sender: TObject);
     procedure silConfirm(Sender: TObject);
     procedure btnKapatClick(Sender: TObject);
@@ -62,6 +64,7 @@ type
     procedure txtDosyaAdiTriggerEvent(Sender: TUniFormControl;
       AButtonId: Integer);
     procedure YukleCompleted(Sender: TObject; AStream: TFileStream);
+    procedure txtDosyaAdiChange(Sender: TObject);
   private
     DOS_ID: integer;
     FTempFilePath: string;
@@ -264,6 +267,12 @@ begin
 
 end;
 
+procedure TDosyaForm.txtDosyaAdiChange(Sender: TObject);
+begin
+  if Trim(qDosya.FieldByName('DOS_DOSYA_ADI').AsString)='' then
+    qDosya.FieldByName('DOS_METIN').Clear;
+end;
+
 procedure TDosyaForm.txtDosyaAdiTriggerEvent(Sender: TUniFormControl;
   AButtonId: Integer);
 begin
@@ -364,6 +373,30 @@ begin
 
     UniMainModule.Focus(txtCihaz);
 
+    if UniMainModule.KUL_ROLU='Kullanýcý' then
+    begin
+      txtDurum.Visible := false;
+      txtOnay.Visible := false;
+      txtEserAdi.ReadOnly := true;
+      txtYazarAdi.ReadOnly := true;
+      txtDosyaAdi.ReadOnly := true;
+      txtAciklama.ReadOnly := true;
+      txtCihaz.ReadOnly := true;
+      txtKategori.ReadOnly := true;
+      txtMetin.ReadOnly := true;
+    end;
+    if UniMainModule.KUL_ROLU='Yazar' then
+    begin
+      txtDurum.Visible := false;
+      txtOnay.Visible := false;
+    end;
+    if UniMainModule.KUL_ROLU='Editör' then
+    begin
+      
+
+    end;
+
+
   except on e: exception do
     UniMainModule.Notification('', HataMesaj(e.Message), 2);
   end;
@@ -371,8 +404,13 @@ end;
 
 procedure TDosyaForm.YukleCompleted(Sender: TObject; AStream: TFileStream);
 begin
-  if qDosya.State in dsEditModes then
+  try
+    if not(qDosya.State in dsEditModes) then qDosya.Edit;
     qDosya.FieldByName('DOS_DOSYA_ADI').AsString := Yukle.FileName;
+    TBlobField(qDosya.FieldByName('DOS_METIN')).LoadFromStream(AStream);
+  except on E: Exception do
+    UniMainModule.Notification('', HataMesaj(e.Message), 2);
+  end;
 end;
 
 procedure TDosyaForm.DugmeleriAyarla;

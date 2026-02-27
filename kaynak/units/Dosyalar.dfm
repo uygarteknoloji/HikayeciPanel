@@ -211,7 +211,7 @@ object DosyalarForm: TDosyalarForm
         OnClick = btnBulClick
       end
       object txtCihaz: TUniEdit
-        Left = 201
+        Left = 326
         Top = 16
         Width = 150
         Height = 24
@@ -223,7 +223,7 @@ object DosyalarForm: TDosyalarForm
         Text = ''
         ParentFont = False
         Font.Height = -13
-        TabOrder = 3
+        TabOrder = 4
         EmptyText = 'Cihaz'
         ClearButton = True
       end
@@ -253,7 +253,7 @@ object DosyalarForm: TDosyalarForm
         IconItems = <>
       end
       object txtKayitSayisi: TUniComboBox
-        Left = 659
+        Left = 784
         Top = 16
         Width = 57
         Height = 24
@@ -272,11 +272,11 @@ object DosyalarForm: TDosyalarForm
         ItemIndex = 0
         ParentFont = False
         Font.Height = -13
-        TabOrder = 4
+        TabOrder = 7
         IconItems = <>
       end
       object txtKategori: TUniEdit
-        Left = 353
+        Left = 478
         Top = 16
         Width = 150
         Height = 24
@@ -293,7 +293,7 @@ object DosyalarForm: TDosyalarForm
         ClearButton = True
       end
       object txtEserAdi: TUniEdit
-        Left = 506
+        Left = 631
         Top = 16
         Width = 150
         Height = 24
@@ -308,6 +308,31 @@ object DosyalarForm: TDosyalarForm
         TabOrder = 6
         EmptyText = 'Eser Ad'#305
         ClearButton = True
+      end
+      object txtOnay: TUniComboBox
+        Left = 202
+        Top = 16
+        Width = 120
+        Height = 24
+        Hint = ''
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Text = ''
+        Items.Strings = (
+          'Onayland'#305
+          'Onaylanmad'#305)
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 3
+        ClientEvents.UniEvents.Strings = (
+          
+            'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'  config.type' +
+            'Ahead = true;'#13#10'}'#13#10)
+        EmptyText = 'Onay Durumu'
+        ClearButton = True
+        IconItems = <>
       end
     end
     object Grid: TUniDBGrid
@@ -355,6 +380,16 @@ object DosyalarForm: TDosyalarForm
           CheckBoxField.DisplayValues = 'Kullan'#305'mda;Kullan'#305'm D'#305#351#305
         end
         item
+          FieldName = 'DOS_ONAYLANDI'
+          Title.Caption = 'Onay Durumu'
+          Width = 150
+          Alignment = taLeftJustify
+          Sortable = True
+          CheckBoxField.BooleanFieldOnly = False
+          CheckBoxField.FieldValues = '1;0'
+          CheckBoxField.DisplayValues = 'Onayland'#305';Onaylanmad'#305
+        end
+        item
           FieldName = 'CIH_ADI'
           Title.Caption = 'Cihaz Ad'#305
           Width = 200
@@ -365,6 +400,7 @@ object DosyalarForm: TDosyalarForm
           Title.Caption = 'Kategori'
           Width = 200
           ReadOnly = True
+          Sortable = True
         end
         item
           FieldName = 'DOS_ESER_ADI'
@@ -382,6 +418,7 @@ object DosyalarForm: TDosyalarForm
           FieldName = 'DOS_YAZAR_ADI'
           Title.Caption = 'Yazar Ad'#305
           Width = 200
+          Sortable = True
         end
         item
           FieldName = 'DOS_ACIKLAMA'
@@ -415,8 +452,10 @@ object DosyalarForm: TDosyalarForm
   object qDosyalar: TUniQuery
     Connection = UniServerModule.Data
     SQL.Strings = (
-      'Select DOSYALAR.*, CIH_ADI, KAT_ADI, KAT_KLASOR'
-      'From DOSYALAR'
+      'Select DOS_ID, DOS_DURUM, DOS_ONAYLANDI, DOS_CIH_ID,'
+      '       DOS_KAT_ID, DOS_ESER_ADI, DOS_DOSYA_ADI, DOS_YAZAR_ADI,'
+      '       DOS_ACIKLAMA, CIH_ADI, KAT_ADI, KAT_KLASOR'
+      'From DOSYALAR D'
       'Left Join KATEGORILER On DOS_KAT_ID=KAT_ID'
       'Left Join CIHAZLAR On DOS_CIH_ID=CIH_ID')
     SpecificOptions.Strings = (

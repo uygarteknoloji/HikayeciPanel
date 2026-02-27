@@ -168,8 +168,6 @@ object KullaniciForm: TKullaniciForm
     Align = alClient
     Color = 15724527
     TabOrder = 1
-    ExplicitLeft = -176
-    ExplicitTop = 92
     ScrollHeight = 343
     ScrollWidth = 472
     object txtAdi: TUniDBEdit
@@ -443,6 +441,7 @@ object KullaniciForm: TKullaniciForm
       Style = csDropDownList
       Items.Strings = (
         'Kullan'#305'c'#305
+        'Edit'#246'r'
         'Yazar'
         'Sistem Y'#246'neticisi')
       ParentFont = False

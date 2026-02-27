@@ -1,15 +1,15 @@
 object DosyaForm: TDosyaForm
   Left = 0
   Top = 0
-  Width = 627
-  Height = 478
+  Width = 1024
+  Height = 512
   OnCreate = UniFrameCreate
   OnAjaxEvent = UniFrameAjaxEvent
   TabOrder = 0
   object UniToolBar1: TUniPanel
     Left = 0
     Top = 0
-    Width = 627
+    Width = 1024
     Height = 60
     Hint = ''
     Margins.Left = 5
@@ -42,7 +42,7 @@ object DosyaForm: TDosyaForm
     object UniPanel1: TUniPanel
       Left = 226
       Top = 2
-      Width = 287
+      Width = 684
       Height = 56
       Hint = ''
       Margins.Left = 5
@@ -79,7 +79,7 @@ object DosyaForm: TDosyaForm
       OnClick = btnYeniClick
     end
     object btnKapat: TUniBitBtn
-      Left = 569
+      Left = 966
       Top = 2
       Width = 56
       Height = 56
@@ -136,7 +136,7 @@ object DosyaForm: TDosyaForm
       OnClick = btnSilClick
     end
     object btnYardim: TUniBitBtn
-      Left = 513
+      Left = 910
       Top = 2
       Width = 56
       Height = 56
@@ -158,8 +158,8 @@ object DosyaForm: TDosyaForm
   object UniScrollBox1: TUniScrollBox
     Left = 0
     Top = 60
-    Width = 627
-    Height = 418
+    Width = 1024
+    Height = 452
     Hint = ''
     Margins.Left = 5
     Margins.Top = 5
@@ -168,8 +168,8 @@ object DosyaForm: TDosyaForm
     Align = alClient
     Color = 15724527
     TabOrder = 1
-    ScrollHeight = 373
-    ScrollWidth = 474
+    ScrollHeight = 401
+    ScrollWidth = 995
     object txtYazarAdi: TUniDBEdit
       Left = 23
       Top = 218
@@ -236,13 +236,14 @@ object DosyaForm: TDosyaForm
           IconCls = 'x-form-search-trigger'
           HandleClicks = True
         end>
+      OnChange = txtDosyaAdiChange
       OnTriggerEvent = txtDosyaAdiTriggerEvent
     end
     object txtAciklama: TUniDBMemo
       Left = 23
       Top = 284
       Width = 451
-      Height = 89
+      Height = 117
       Hint = ''
       Margins.Left = 5
       Margins.Top = 5
@@ -357,6 +358,41 @@ object DosyaForm: TDosyaForm
       FieldLabel = 'Eser Ad'#305
       FieldLabelSeparator = ' '
       FieldLabelFont.Color = clRed
+    end
+    object txtOnay: TUniDBCheckBox
+      Left = 130
+      Top = 81
+      Width = 97
+      Height = 17
+      Hint = ''
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      DataField = 'DOS_ONAYLANDI'
+      DataSource = dsDosya
+      ValueChecked = '1'
+      ValueUnchecked = '0'
+      Caption = 'Onayland'#305
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 7
+      ParentColor = False
+      Color = clBtnFace
+    end
+    object txtMetin: TUniDBMemo
+      Left = 498
+      Top = 119
+      Width = 497
+      Height = 282
+      Hint = ''
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      DataField = 'DOS_METIN'
+      DataSource = dsDosya
+      TabOrder = 8
     end
   end
   object sil: TUniSweetAlert
